@@ -8,10 +8,54 @@
   --accent-color: #847cfa;
   --font-family: "Montserrat", sans-serif;
 }
-body {
+html, body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  height: 100%;
   font-family: var(--font-family);
 }
+
+#root {
+  height: 100%;
+}
+
+/* Custom Scrollbar Styles */
+.custom-scrollbar {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 #1f2937;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #1f2937;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 10px;
+  border: 1px solid #1f2937;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* Number input without spin buttons */
+.no-spin::-webkit-outer-spin-button,
+.no-spin::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spin[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 /* Utility classes for consistent spacing #1447E6 #222831*/
