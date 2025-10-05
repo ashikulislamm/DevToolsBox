@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Logo from "../assets/Logo.png";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // mobile
@@ -34,7 +35,7 @@ export const Navbar = () => {
       "JWT",
       "Cron tester",
     ],
-    "Coding": [
+    Coding: [
       "Snippet generator",
       "Dockerfile & .gitignore templates",
       "CSS gradient/animation generator",
@@ -47,11 +48,7 @@ export const Navbar = () => {
       "SVG → JSX",
       "Icon library",
     ],
-    "Productivity": [
-      "Timezone converter",
-      "Code diff checker",
-      "Git cheatsheet",
-    ],
+    Productivity: ["Timezone converter", "Code diff checker", "Git cheatsheet"],
   };
   return (
     <>
@@ -59,17 +56,23 @@ export const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             {/* Logo */}
-            <div className="flex items-center">
+            <a className="flex items-center" href="/">
               <img className="h-8 w-8 mr-2" src={Logo} alt="Logo" />
               <span className="text-white font-bold text-lg">DevTools</span>
-            </div>
+            </a>
 
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-6">
-              <a href="#" className="text-blue-400 hover:text-blue-500">
+              <a
+                href="/"
+                className="text-[var(--accent-color)] hover:text-[var(--accent-color)]"
+              >
                 Home
               </a>
-              <a href="#" className="text-gray-300 hover:text-white">
+              <a
+                href="#"
+                className="text-gray-300 hover:text-[var(--accent-color)]"
+              >
                 About
               </a>
 
@@ -77,8 +80,12 @@ export const Navbar = () => {
               {Object.keys(services).map((category) => (
                 <div key={category} className="relative" ref={dropdownRef}>
                   <button
-                    onClick={() => setActiveCategory(activeCategory === category ? null : category)}
-                    className="flex items-center text-gray-300 hover:text-white"
+                    onClick={() =>
+                      setActiveCategory(
+                        activeCategory === category ? null : category
+                      )
+                    }
+                    className="flex items-center text-gray-300 hover:text-[var(--accent-color)]"
                   >
                     {category}
                     <svg
@@ -114,7 +121,10 @@ export const Navbar = () => {
                 </div>
               ))}
 
-              <a href="#" className="text-gray-300 hover:text-white">
+              <a
+                href="/contact"
+                className="text-gray-300 hover:text-[var(--accent-color)]"
+              >
                 Contact
               </a>
             </div>
@@ -126,7 +136,7 @@ export const Navbar = () => {
             <div className="md:hidden">
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="text-gray-300 hover:text-white"
+                className="text-gray-300 hover:text-[var(--accent-color)]"
               >
                 {isOpen ? "✖" : "☰"}
               </button>
@@ -139,16 +149,16 @@ export const Navbar = () => {
           <div className="md:hidden bg-gray-800">
             <div className="flex flex-col items-center space-y-2 py-4">
               <a
-                href="#"
-                className="text-gray-300 hover:text-white py-2 px-4 hover:bg-gray-700 rounded-md transition-colors"
+                href="/"
+                className="text-gray-300 hover:text-[var(--accent-color)] py-2 px-4 hover:bg-gray-700 rounded-md transition-colors"
               >
                 Home
               </a>
               <a
                 href="#"
-                className="text-gray-300 hover:text-white py-2 px-4 hover:bg-gray-700 rounded-md transition-colors"
+                className="text-gray-300 hover:text-[var(--accent-color)] py-2 px-4 hover:bg-gray-700 rounded-md transition-colors"
               >
-                Features
+                About
               </a>
 
               {/* Mobile Category Dropdowns */}
@@ -160,7 +170,7 @@ export const Navbar = () => {
                         activeCategory === category ? null : category
                       )
                     }
-                    className="w-full flex items-center justify-center text-gray-300 hover:text-white py-2 px-4 hover:bg-gray-700 rounded-md transition-colors"
+                    className="w-full flex items-center justify-center text-gray-300 hover:text-[var(--accent-color)] py-2 px-4 hover:bg-gray-700 rounded-md transition-colors"
                   >
                     {category}
                     <svg
@@ -197,8 +207,8 @@ export const Navbar = () => {
               ))}
 
               <a
-                href="#"
-                className="text-gray-300 hover:text-white py-2 px-4 hover:bg-gray-700 rounded-md transition-colors"
+                href="/contact"
+                className="text-gray-300 hover:text-[var(--accent-color)] py-2 px-4 hover:bg-gray-700 rounded-md transition-colors"
               >
                 Contact
               </a>
