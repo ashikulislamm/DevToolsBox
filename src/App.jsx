@@ -8,6 +8,8 @@ import { Contact } from "./pages/Contact.jsx";
 import JsonFormatter from "./pages/tools/JsonFormatter.jsx";
 import Base64Tool from "./pages/tools/Base64Tool.jsx";
 import UuidTool from "./pages/tools/UuidTool.jsx";
+import RegexTester from "./pages/tools/RegexTester.jsx";
+import About from "./pages/About.jsx";
 function App() {
   const [count, setCount] = useState(0);
 
@@ -21,6 +23,8 @@ function App() {
             <Route path="/tools/json-formatter" element={<JsonFormatter />} />
             <Route path="/tools/base64" element={<Base64Tool />} />
             <Route path="/tools/uuid" element={<UuidTool />} />
+            <Route path="/tools/regex" element={<RegexTester />} />
+            <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>
         </main>
