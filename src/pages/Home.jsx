@@ -13,32 +13,37 @@ export const Home = () => {
     {
       id: 1,
       title: "JSON Formatter",
-      link: "/tools/json-formatter",
+      link: "/DevToolsBox/tools/json-formatter",
       category: "Data Tools",
     },
     {
       id: 2,
       title: "Base64 Encoder/Decoder",
-      link: "/tools/base64",
+      link: "/DevToolsBox/tools/base64",
       category: "Data Tools",
     },
     {
       id: 3,
       title: "UUID Generator",
-      link: "/tools/uuid",
+      link: "/DevToolsBox/tools/uuid",
       category: "Data Tools",
     },
     {
       id: 4,
       title: "Regex Tester",
-      link: "/tools/regex",
+      link: "/DevToolsBox/tools/regex",
       category: "Data Tools",
     },
-    { id: 5, title: "JWT Decoder", link: "/tools/jwt", category: "Data Tools" },
+    {
+      id: 5,
+      title: "JWT Decoder",
+      link: "/DevToolsBox/tools/jwt",
+      category: "Data Tools",
+    },
     {
       id: 6,
       title: "Cron Expression Tester",
-      link: "/tools/cron",
+      link: "/DevToolsBox/tools/cron",
       category: "Data Tools",
     },
 
@@ -46,37 +51,37 @@ export const Home = () => {
     {
       id: 7,
       title: "Code Snippet Generator",
-      link: "/tools/snippet-generator",
+      link: "/DevToolsBox/tools/snippet-generator",
       category: "Code Generators",
     },
     {
       id: 8,
       title: "Dockerfile Generator",
-      link: "/tools/dockerfile",
+      link: "/DevToolsBox/tools/dockerfile",
       category: "Code Generators",
     },
     {
       id: 9,
       title: ".gitignore Generator",
-      link: "/tools/gitignore",
+      link: "/DevToolsBox/tools/gitignore",
       category: "Code Generators",
     },
     {
       id: 10,
       title: "CSS Gradient Generator",
-      link: "/tools/css-gradient",
+      link: "/DevToolsBox/tools/css-gradient",
       category: "Code Generators",
     },
     {
       id: 11,
       title: "CSS Animation Generator",
-      link: "/tools/css-animation",
+      link: "/DevToolsBox/tools/css-animation",
       category: "Code Generators",
     },
     {
       id: 12,
       title: "Tailwind Visualizer",
-      link: "/tools/tailwind-visualizer",
+      link: "/DevToolsBox/tools/tailwind-visualizer",
       category: "Code Generators",
     },
 
@@ -84,31 +89,31 @@ export const Home = () => {
     {
       id: 13,
       title: "Color Palette Generator",
-      link: "/tools/color-palette",
+      link: "/DevToolsBox/tools/color-palette",
       category: "UI/Frontend Tools",
     },
     {
       id: 14,
       title: "Markdown to HTML",
-      link: "/tools/markdown-html",
+      link: "/DevToolsBox/tools/markdown-html",
       category: "UI/Frontend Tools",
     },
     {
       id: 15,
       title: "Responsive Design Tester",
-      link: "/tools/responsive-tester",
+      link: "/DevToolsBox/tools/responsive-tester",
       category: "UI/Frontend Tools",
     },
     {
       id: 16,
       title: "SVG to JSX Converter",
-      link: "/tools/svg-jsx",
+      link: "/DevToolsBox/tools/svg-jsx",
       category: "UI/Frontend Tools",
     },
     {
       id: 17,
       title: "Icon Library",
-      link: "/tools/icons",
+      link: "/DevToolsBox/tools/icons",
       category: "UI/Frontend Tools",
     },
 
@@ -116,7 +121,7 @@ export const Home = () => {
     {
       id: 18,
       title: "Timezone Converter",
-      link: "/tools/timezone",
+      link: "/DevToolsBox/tools/timezone",
       category: "Productivity Tools",
     },
   ];

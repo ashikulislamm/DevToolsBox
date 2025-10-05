@@ -19,13 +19,13 @@ function App() {
         <Navbar />
         <main className="flex-1">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/tools/json-formatter" element={<JsonFormatter />} />
-            <Route path="/tools/base64" element={<Base64Tool />} />
-            <Route path="/tools/uuid" element={<UuidTool />} />
-            <Route path="/tools/regex" element={<RegexTester />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
+            <Route path="/DevToolsBox" element={<Home />} />
+            <Route path="/DevToolsBox/tools/json-formatter" element={<JsonFormatter />} />
+            <Route path="/DevToolsBox/tools/base64" element={<Base64Tool />} />
+            <Route path="/DevToolsBox/tools/uuid" element={<UuidTool />} />
+            <Route path="/DevToolsBox/tools/regex" element={<RegexTester />} />
+            <Route path="/DevToolsBox/about" element={<About />} />
+            <Route path="/DevToolsBox/contact" element={<Contact />} />
           </Routes>
         </main>
         <Footer />

@@ -11,11 +11,7 @@ export const Navbar = () => {
   useEffect(() => {
     const handleClickOutside = (e) => {
       // Only handle outside clicks for desktop dropdown
-      if (
-        navRef.current &&
-        !navRef.current.contains(e.target) &&
-        !isOpen
-      ) {
+      if (navRef.current && !navRef.current.contains(e.target) && !isOpen) {
         setActiveCategory(null);
       }
     };
@@ -26,30 +22,45 @@ export const Navbar = () => {
   // services data with paths
   const services = {
     "Data Tools": [
-      { name: "JSON formatter", path: "/tools/json-formatter" },
-      { name: "Base64", path: "/tools/base64" },
-      { name: "UUID", path: "/tools/uuid" },
-      { name: "Regex", path: "/tools/regex" },
-      { name: "JWT", path: "/tools/jwt" },
-      { name: "Cron tester", path: "/tools/cron" },
+      { name: "JSON formatter", path: "/DevToolsBox/tools/json-formatter" },
+      { name: "Base64", path: "/DevToolsBox/tools/base64" },
+      { name: "UUID", path: "/DevToolsBox/tools/uuid" },
+      { name: "Regex", path: "/DevToolsBox/tools/regex" },
+      { name: "JWT", path: "/DevToolsBox/tools/jwt" },
+      { name: "Cron tester", path: "/DevToolsBox/tools/cron" },
     ],
     Coding: [
-      { name: "Snippet generator", path: "/tools/snippet-generator" },
-      { name: "Dockerfile & .gitignore templates", path: "/tools/dockerfile" },
-      { name: "CSS gradient/animation generator", path: "/tools/css-gradient" },
-      { name: "Tailwind visualizer", path: "/tools/tailwind-visualizer" },
+      {
+        name: "Snippet generator",
+        path: "/DevToolsBox/tools/snippet-generator",
+      },
+      {
+        name: "Dockerfile & .gitignore templates",
+        path: "/DevToolsBox/tools/dockerfile",
+      },
+      {
+        name: "CSS gradient/animation generator",
+        path: "/DevToolsBox/tools/css-gradient",
+      },
+      {
+        name: "Tailwind visualizer",
+        path: "/DevToolsBox/tools/tailwind-visualizer",
+      },
     ],
     "UI Tools": [
-      { name: "Color palette", path: "/tools/color-palette" },
-      { name: "Markdown → HTML", path: "/tools/markdown-html" },
-      { name: "Responsive tester", path: "/tools/responsive-tester" },
-      { name: "SVG → JSX", path: "/tools/svg-jsx" },
-      { name: "Icon library", path: "/tools/icons" },
+      { name: "Color palette", path: "/DevToolsBox/tools/color-palette" },
+      { name: "Markdown → HTML", path: "/DevToolsBox/tools/markdown-html" },
+      {
+        name: "Responsive tester",
+        path: "/DevToolsBox/tools/responsive-tester",
+      },
+      { name: "SVG → JSX", path: "/DevToolsBox/tools/svg-jsx" },
+      { name: "Icon library", path: "/DevToolsBox/tools/icons" },
     ],
     Productivity: [
-      { name: "Timezone converter", path: "/tools/timezone" },
-      { name: "Code diff checker", path: "/tools/code-diff" },
-      { name: "Git cheatsheet", path: "/tools/git-cheatsheet" },
+      { name: "Timezone converter", path: "/DevToolsBox/tools/timezone" },
+      { name: "Code diff checker", path: "/DevToolsBox/tools/code-diff" },
+      { name: "Git cheatsheet", path: "/DevToolsBox/tools/git-cheatsheet" },
     ],
   };
   return (
@@ -58,7 +69,7 @@ export const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             {/* Logo */}
-            <Link className="flex items-center" to="/">
+            <Link className="flex items-center" to="/DevToolsBox">
               <img className="h-8 w-8 mr-2" src={Logo} alt="Logo" />
               <span className="text-white font-bold text-lg">DevTools</span>
             </Link>
@@ -66,13 +77,13 @@ export const Navbar = () => {
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-6" ref={navRef}>
               <Link
-                to="/"
+                to="/DevToolsBox"
                 className="text-[var(--accent-color)] hover:text-[var(--accent-color)]"
               >
                 Home
               </Link>
               <Link
-                to="/about"
+                to="/DevToolsBox/about"
                 className="text-gray-300 hover:text-[var(--accent-color)]"
               >
                 About
@@ -109,7 +120,7 @@ export const Navbar = () => {
                   </button>
 
                   {activeCategory === category && (
-                    <div 
+                    <div
                       className="absolute z-20 mt-2 w-56 bg-gray-700 rounded-md shadow-lg"
                       onClick={(e) => e.stopPropagation()}
                     >
@@ -129,7 +140,7 @@ export const Navbar = () => {
               ))}
 
               <Link
-                to="/contact"
+                to="/DevToolsBox/contact"
                 className="text-gray-300 hover:text-[var(--accent-color)]"
               >
                 Contact
@@ -163,7 +174,7 @@ export const Navbar = () => {
                 Home
               </Link>
               <Link
-                to="/about"
+                to="/DevToolsBox/about"
                 className="text-gray-300 hover:text-[var(--accent-color)] py-2 px-4 hover:bg-gray-700 rounded-md transition-colors"
                 onClick={() => setIsOpen(false)}
               >
@@ -220,7 +231,7 @@ export const Navbar = () => {
               ))}
 
               <Link
-                to="/contact"
+                to="/DevToolsBox/contact"
                 className="text-gray-300 hover:text-[var(--accent-color)] py-2 px-4 hover:bg-gray-700 rounded-md transition-colors"
                 onClick={() => setIsOpen(false)}
               >
