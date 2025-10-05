@@ -18,7 +18,7 @@ export const Hero = () => {
       <div className="max-w-screen-xl mx-auto px-4 py-16 lg:py-24 text-center">
         {/* Badge */}
         <div className="flex justify-center">
-          <span className="inline-flex items-center gap-2 rounded-full bg-gray-800 px-1.75 py-1.25 text-sm font-medium text-white-400">
+          <span className="inline-flex items-center gap-2 rounded-full bg-[var(--primary-color)] px-1.75 py-1.25 text-sm font-medium text-white-400">
             <span className="bg-[#9089fc] text-white text-xs px-2 py-0.5 rounded-full">
               New
             </span>
@@ -27,7 +27,7 @@ export const Hero = () => {
         </div>
 
         {/* Heading */}
-        <h1 className="text-black mt-6 text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl md:text-6xl">
+        <h1 className="text-[var(--primary-color)] mt-6 text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl md:text-6xl">
           The Open Toolbox for Modern Developers
         </h1>
 

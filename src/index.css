@@ -3,9 +3,9 @@
 @import "tailwindcss";
 
 :root {
-  --primary-color: #222831;
+  --primary-color: #0F172A;
   --secondary-color: #393e46;
-  --accent-color: #9089fc;
+  --accent-color: #847cfa;
   --font-family: "Montserrat", sans-serif;
 }
 body {
@@ -14,4 +14,4 @@ body {
   box-sizing: border-box;
   font-family: var(--font-family);
 }
-/* Utility classes for consistent spacing #1447E6*/
+/* Utility classes for consistent spacing #1447E6 #222831*/

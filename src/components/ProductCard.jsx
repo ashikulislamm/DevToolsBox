@@ -4,13 +4,13 @@ import P1 from "../assets/Format.png";
 
 export const ProductCard = ({ image, title, link, category }) => {
   return (
-    <div className="bg-[#222831] text-white rounded-lg shadow-md overflow-hidden w-72 hover:scale-105 transition-transform p-4">
+    <div className="bg-[var(--primary-color)] text-white rounded-lg shadow-md overflow-hidden w-72 hover:scale-105 transition-transform p-4">
       {/* Image */}
       <div className="relative">
         <img
           src={P1}
           alt={title}
-          className="w-full h-30 object-contain bg-gray-800"
+          className="w-full h-30 object-contain"
         />
         {/* Icons */}
         <div className="absolute top-2 right-2 flex flex-col gap-2">
