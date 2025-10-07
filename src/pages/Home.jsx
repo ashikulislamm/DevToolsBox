@@ -172,20 +172,20 @@ export const Home = () => {
       <Hero />
       <div className="container mx-auto px-4 py-8">
         {/* Header with Filter */}
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold text-[var(--primary-color)]">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[var(--primary-color)]">
             Developer Tools
-            <span className="text-lg text-[var(--accent-color)] ml-2 transition-all duration-300">
+            <span className="text-sm sm:text-lg text-[var(--accent-color)] ml-2 transition-all duration-300 block sm:inline">
               ({filteredProducts.length}{" "}
               {filteredProducts.length === 1 ? "tool" : "tools"})
             </span>
           </h2>
 
           {/* Filter Dropdown */}
-          <div className="relative" ref={dropdownRef}>
+          <div className="relative w-full sm:w-auto" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="bg-gray-700 text-white px-3 py-2 rounded-md cursor-pointer transition-all duration-200 flex items-center justify-between min-w-[160px]"
+              className="bg-gray-700 text-white px-3 py-2 rounded-md cursor-pointer transition-all duration-200 flex items-center justify-between w-full sm:min-w-[160px] sm:w-auto"
             >
               {selectedCategory}
               <svg
@@ -230,7 +230,7 @@ export const Home = () => {
 
         {/* Products Grid */}
         <div
-          className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center transition-all duration-300 ${
+          className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center transition-all duration-300 ${
             isAnimating ? "opacity-0 scale-95" : "opacity-100 scale-100"
           }`}
         >
