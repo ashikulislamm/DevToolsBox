@@ -10,6 +10,7 @@ import Base64Tool from "./pages/tools/Base64Tool.jsx";
 import UuidTool from "./pages/tools/UuidTool.jsx";
 import RegexTester from "./pages/tools/RegexTester.jsx";
 import JwtDecoder from "./pages/tools/JwtDecoder.jsx";
+import SnippetGenerator from "./pages/tools/SnippetGenerator.jsx";
 import About from "./pages/About.jsx";
 function App() {
   const [count, setCount] = useState(0);
@@ -26,6 +27,7 @@ function App() {
             <Route path="/DevToolsBox/tools/uuid" element={<UuidTool />} />
             <Route path="/DevToolsBox/tools/regex" element={<RegexTester />} />
             <Route path="/DevToolsBox/tools/jwt" element={<JwtDecoder />} />
+            <Route path="/DevToolsBox/tools/snippet-generator" element={<SnippetGenerator />} />
             <Route path="/DevToolsBox/about" element={<About />} />
             <Route path="/DevToolsBox/contact" element={<Contact />} />
           </Routes>
