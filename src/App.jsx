@@ -12,6 +12,7 @@ import RegexTester from "./pages/tools/RegexTester.jsx";
 import JwtDecoder from "./pages/tools/JwtDecoder.jsx";
 import SnippetGenerator from "./pages/tools/SnippetGenerator.jsx";
 import DockerfileGenerator from "./pages/tools/DockerfileGenerator.jsx";
+import GitignoreGenerator from "./pages/tools/GitignoreGenerator.jsx";
 import About from "./pages/About.jsx";
 function App() {
   const [count, setCount] = useState(0);
@@ -30,6 +31,7 @@ function App() {
             <Route path="/DevToolsBox/tools/jwt" element={<JwtDecoder />} />
             <Route path="/DevToolsBox/tools/snippet-generator" element={<SnippetGenerator />} />
             <Route path="/DevToolsBox/tools/dockerfile" element={<DockerfileGenerator />} />
+            <Route path="/DevToolsBox/tools/gitignore" element={<GitignoreGenerator />} />
             <Route path="/DevToolsBox/about" element={<About />} />
             <Route path="/DevToolsBox/contact" element={<Contact />} />
           </Routes>
