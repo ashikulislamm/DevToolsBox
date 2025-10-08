@@ -1,14 +1,63 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaShoppingCart, FaRegHeart, FaArrowRight } from "react-icons/fa";
+import { 
+  FaShoppingCart, FaRegHeart, FaArrowRight, FaDocker, FaCode, FaLock, FaSearch, 
+  FaCopy, FaKey, FaFileCode, FaClock, FaGitAlt, FaPalette, FaCss3Alt, 
+  FaEye, FaMarkdown, FaMobile, FaReact, FaIcons, FaGlobe, FaTasks
+} from "react-icons/fa";
 import P1 from "../assets/Format.png";
 
-export const ProductCard = ({ image, title, link, category }) => {
+export const ProductCard = ({ image, title, link, category, icon }) => {
+  // Icon mapping function
+  const getIcon = (iconName) => {
+    switch (iconName) {
+      case "FaCode":
+        return <FaCode className="w-16 h-16 text-blue-400 mt-4" />;
+      case "FaLock":
+        return <FaLock className="w-16 h-16 text-green-400 mt-4" />;
+      case "FaSearch":
+        return <FaSearch className="w-16 h-16 text-yellow-400 mt-4" />;
+      case "FaCopy":
+        return <FaCopy className="w-16 h-16 text-purple-400 mt-4" />;
+      case "FaKey":
+        return <FaKey className="w-16 h-16 text-red-400 mt-4" />;
+      case "FaFileCode":
+        return <FaFileCode className="w-16 h-16 text-cyan-400 mt-4" />;
+      case "FaDocker":
+        return <FaDocker className="w-16 h-16 text-blue-500 mt-4" />;
+      case "FaClock":
+        return <FaClock className="w-16 h-16 text-orange-400 mt-4" />;
+      case "FaGitAlt":
+        return <FaGitAlt className="w-16 h-16 text-orange-500 mt-4" />;
+      case "FaPalette":
+        return <FaPalette className="w-16 h-16 text-pink-400 mt-4" />;
+      case "FaCss3Alt":
+        return <FaCss3Alt className="w-16 h-16 text-blue-400 mt-4" />;
+      case "FaEye":
+        return <FaEye className="w-16 h-16 text-indigo-400 mt-4" />;
+      case "FaMarkdown":
+        return <FaMarkdown className="w-16 h-16 text-gray-300 mt-4" />;
+      case "FaMobile":
+        return <FaMobile className="w-16 h-16 text-green-500 mt-4" />;
+      case "FaReact":
+        return <FaReact className="w-16 h-16 text-cyan-400 mt-4" />;
+      case "FaIcons":
+        return <FaIcons className="w-16 h-16 text-purple-400 mt-4" />;
+      case "FaGlobe":
+        return <FaGlobe className="w-16 h-16 text-teal-400 mt-4" />;
+      case "FaTasks":
+        return <FaTasks className="w-16 h-16 text-emerald-400 mt-4" />;
+      default:
+        return <FaCode className="w-16 h-16 text-gray-400 mt-4" />;
+    }
+  };
   return (
     <div className="bg-[var(--primary-color)] text-white rounded-lg shadow-md overflow-hidden w-72 hover:scale-105 transition-transform p-4">
-      {/* Image */}
+      {/* Image/Icon */}
       <div className="relative">
-        <img src={P1} alt={title} className="w-full h-30 object-contain" />
+        <div className="w-full h-32 flex items-center justify-center rounded-lg">
+          {icon ? getIcon(icon) : <img src={P1} alt={title} className="w-full h-30 object-contain" />}
+        </div>
         {/* Icons */}
         <div className="absolute top-2 right-2 flex flex-col gap-2">
           <button className="p-1 bg-gray-700 rounded-full hover:bg-gray-600">

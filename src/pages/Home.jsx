@@ -15,36 +15,42 @@ export const Home = () => {
       title: "JSON Formatter",
       link: "/DevToolsBox/tools/json-formatter",
       category: "Data Tools",
+      icon: "FaCode"
     },
     {
       id: 2,
       title: "Base64 Encoder/Decoder",
       link: "/DevToolsBox/tools/base64",
       category: "Data Tools",
+      icon: "FaLock"
     },
     {
       id: 3,
       title: "UUID Generator",
       link: "/DevToolsBox/tools/uuid",
       category: "Data Tools",
+      icon: "FaKey"
     },
     {
       id: 4,
       title: "Regex Tester",
       link: "/DevToolsBox/tools/regex",
       category: "Data Tools",
+      icon: "FaSearch"
     },
     {
       id: 5,
       title: "JWT Decoder",
       link: "/DevToolsBox/tools/jwt",
       category: "Data Tools",
+      icon: "FaLock"
     },
     {
       id: 6,
       title: "Cron Expression Tester",
       link: "/DevToolsBox/tools/cron",
       category: "Data Tools",
+      icon: "FaClock"
     },
 
     // Code Generators
@@ -53,36 +59,43 @@ export const Home = () => {
       title: "Code Snippet Generator",
       link: "/DevToolsBox/tools/snippet-generator",
       category: "Code Generators",
+      icon: "FaFileCode"
     },
     {
       id: 8,
       title: "Dockerfile Generator",
+      description: "Generate optimized Dockerfiles for different technologies",
       link: "/DevToolsBox/tools/dockerfile",
       category: "Code Generators",
+      icon: "FaDocker"
     },
     {
       id: 9,
       title: ".gitignore Generator",
       link: "/DevToolsBox/tools/gitignore",
       category: "Code Generators",
+      icon: "FaGitAlt"
     },
     {
       id: 10,
       title: "CSS Gradient Generator",
       link: "/DevToolsBox/tools/css-gradient",
       category: "Code Generators",
+      icon: "FaPalette"
     },
     {
       id: 11,
       title: "CSS Animation Generator",
       link: "/DevToolsBox/tools/css-animation",
       category: "Code Generators",
+      icon: "FaCss3Alt"
     },
     {
       id: 12,
       title: "Tailwind Visualizer",
       link: "/DevToolsBox/tools/tailwind-visualizer",
       category: "Code Generators",
+      icon: "FaEye"
     },
 
     // UI/Frontend Tools
@@ -91,30 +104,35 @@ export const Home = () => {
       title: "Color Palette Generator",
       link: "/DevToolsBox/tools/color-palette",
       category: "UI/Frontend Tools",
+      icon: "FaPalette"
     },
     {
       id: 14,
       title: "Markdown to HTML",
       link: "/DevToolsBox/tools/markdown-html",
       category: "UI/Frontend Tools",
+      icon: "FaMarkdown"
     },
     {
       id: 15,
       title: "Responsive Design Tester",
       link: "/DevToolsBox/tools/responsive-tester",
       category: "UI/Frontend Tools",
+      icon: "FaMobile"
     },
     {
       id: 16,
       title: "SVG to JSX Converter",
       link: "/DevToolsBox/tools/svg-jsx",
       category: "UI/Frontend Tools",
+      icon: "FaReact"
     },
     {
       id: 17,
       title: "Icon Library",
       link: "/DevToolsBox/tools/icons",
       category: "UI/Frontend Tools",
+      icon: "FaIcons"
     },
 
     // Productivity Tools
@@ -123,6 +141,7 @@ export const Home = () => {
       title: "Timezone Converter",
       link: "/DevToolsBox/tools/timezone",
       category: "Productivity Tools",
+      icon: "FaGlobe"
     },
   ];
   // Get unique categories for filter dropdown
@@ -250,6 +269,7 @@ export const Home = () => {
                 title={product.title}
                 link={product.link}
                 category={product.category}
+                icon={product.icon}
               />
             </div>
           ))}
