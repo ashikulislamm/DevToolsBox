@@ -7,6 +7,7 @@ export default function JwtDecoder() {
   const [decodedPayload, setDecodedPayload] = useState(null);
   const [error, setError] = useState("");
   const [notifications, setNotifications] = useState([]);
+  const [showGuide, setShowGuide] = useState(false);
 
   // Notification functions
   const showNotification = (message, type = "success") => {
@@ -209,6 +210,12 @@ export default function JwtDecoder() {
         <h1 className="text-2xl font-bold text-white">🔐 JWT Decoder</h1>
         <div className="flex flex-wrap gap-2 mt-3 sm:mt-0">
           <button
+            onClick={() => setShowGuide(!showGuide)}
+            className="px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-700"
+          >
+            {showGuide ? "Hide Guide" : "Show Guide"}
+          </button>
+          <button
             onClick={decodeToken}
             className="px-3 py-1.5 rounded-lg text-sm font-medium"
             style={{ backgroundColor: "var(--accent-color)" }}
@@ -230,6 +237,59 @@ export default function JwtDecoder() {
           </button>
         </div>
       </div>
+
+      {/* Usage Guide */}
+      {showGuide && (
+        <div className="mt-6 p-4 bg-gray-800 rounded-lg border border-gray-600">
+          <h3 className="font-semibold mb-3 text-blue-300 flex items-center">
+            📚 How to Use JWT Decoder
+          </h3>
+          <div className="space-y-4 text-sm text-gray-300">
+            <div>
+              <h4 className="font-medium text-white mb-1">1. What is JWT?</h4>
+              <p>• <strong>JWT (JSON Web Token)</strong> is a compact, URL-safe means of representing claims</p>
+              <p>• Used for secure information transmission between parties</p>
+              <p>• Commonly used for authentication and authorization</p>
+              <p>• Structure: <code className="bg-gray-700 px-1 rounded">header.payload.signature</code></p>
+            </div>
+            <div>
+              <h4 className="font-medium text-white mb-1">2. How to Use This Tool</h4>
+              <p>• <strong>Paste JWT Token</strong>: Copy your JWT token into the input field</p>
+              <p>• <strong>Click Decode</strong>: The tool will decode the header and payload</p>
+              <p>• <strong>View Results</strong>: See the decoded JSON data in readable format</p>
+              <p>• <strong>Copy Results</strong>: Use "Copy Decoded" to copy the decoded data</p>
+            </div>
+            <div>
+              <h4 className="font-medium text-white mb-1">3. JWT Structure Explained</h4>
+              <p>• <strong>Header</strong>: Contains metadata (algorithm, token type)</p>
+              <p>• <strong>Payload</strong>: Contains claims (user data, expiration, etc.)</p>
+              <p>• <strong>Signature</strong>: Ensures token hasn't been tampered with</p>
+            </div>
+            <div>
+              <h4 className="font-medium text-white mb-1">4. Common JWT Claims</h4>
+              <p>• <strong>iss</strong>: Issuer - who created the token</p>
+              <p>• <strong>sub</strong>: Subject - who the token is about</p>
+              <p>• <strong>aud</strong>: Audience - who should consume the token</p>
+              <p>• <strong>exp</strong>: Expiration time - when the token expires</p>
+              <p>• <strong>iat</strong>: Issued at - when the token was created</p>
+              <p>• <strong>nbf</strong>: Not before - when the token becomes valid</p>
+            </div>
+            <div className="p-3 bg-blue-900/30 border border-blue-700 rounded">
+              <h4 className="font-medium text-blue-300 mb-1">⚠️ Security Note:</h4>
+              <p>• JWTs are encoded, not encrypted (readable by anyone)</p>
+              <p>• Never put sensitive data in JWT payload</p>
+              <p>• Always verify JWT signatures on the server side</p>
+              <p>• This tool only decodes - it doesn't verify signatures</p>
+            </div>
+            <div className="p-3 bg-green-900/30 border border-green-700 rounded">
+              <h4 className="font-medium text-green-300 mb-1">💡 Example JWT:</h4>
+              <p className="font-mono text-xs break-all bg-gray-700 p-2 rounded mt-1">
+                eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Input */}
       <div>

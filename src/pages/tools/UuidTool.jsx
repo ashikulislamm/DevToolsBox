@@ -161,7 +161,7 @@ export default function UuidTool() {
 
   return (
     <div
-      className="w-full max-w-6xl mx-auto mt-8 p-6 rounded-2xl shadow-sm border"
+      className="w-full max-w-6xl mx-auto mt-8 mb-8 p-6 rounded-2xl shadow-sm border"
       style={{
         backgroundColor: "var(--primary-color)",
         color: "#fff",
