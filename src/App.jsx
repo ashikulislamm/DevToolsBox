@@ -14,6 +14,7 @@ import SnippetGenerator from "./pages/tools/SnippetGenerator.jsx";
 import DockerfileGenerator from "./pages/tools/DockerfileGenerator.jsx";
 import GitignoreGenerator from "./pages/tools/GitignoreGenerator.jsx";
 import CssGradientGenerator from "./pages/tools/CssGradientGenerator.jsx";
+import CssAnimationGenerator from "./pages/tools/CssAnimationGenerator.jsx";
 import About from "./pages/About.jsx";
 function App() {
   const [count, setCount] = useState(0);
@@ -48,6 +49,10 @@ function App() {
             <Route
               path="/DevToolsBox/tools/css-gradient"
               element={<CssGradientGenerator />}
+            />
+            <Route
+              path="/DevToolsBox/tools/css-animation"
+              element={<CssAnimationGenerator />}
             />
             <Route path="/DevToolsBox/about" element={<About />} />
             <Route path="/DevToolsBox/contact" element={<Contact />} />
