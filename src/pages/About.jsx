@@ -88,6 +88,87 @@ export default function About() {
           </a>
         </div>
 
+        {/* Developer Info Section */}
+        <div className="mt-16 p-8 rounded-2xl border border-gray-700 bg-[var(--primary-color)]">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-white">
+            👨‍💻 Meet the Developer
+          </h2>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
+            {/* Developer Avatar/Photo */}
+            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-4xl font-bold text-white shadow-2xl">
+              👨‍💻
+            </div>
+            
+            {/* Developer Info */}
+            <div className="text-center sm:text-left">
+              <h3 className="text-xl font-bold text-white mb-2">
+                Ashikul Islam
+              </h3>
+              <p className="text-[var(--accent-color)] font-semibold mb-3">
+                Full Stack Developer & DevTools Enthusiast
+              </p>
+              <p className="text-gray-300 max-w-md leading-relaxed">
+                Passionate about creating developer tools that make coding life easier. 
+                Specializing in React, JavaScript, and modern web technologies.
+              </p>
+              
+              {/* Social Links */}
+              <div className="flex justify-center sm:justify-start gap-4 mt-4">
+                <a
+                  href="https://github.com/ashikulislamm"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-white text-sm font-medium transition-colors flex items-center gap-2"
+                >
+                  🐙 GitHub
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/ashikulislammm/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-lg bg-[var(--accent-color)] text-white text-sm font-medium transition-colors flex items-center gap-2"
+                >
+                  💼 LinkedIn
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Developer Stats */}
+          <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="text-center p-4 bg-[var(--primary-color)] rounded-lg">
+              <div className="text-2xl font-bold text-white">2024</div>
+              <div className="text-xs uppercase tracking-wide text-[var(--accent-color)]">Started</div>
+            </div>
+            <div className="text-center p-4 bg-[var(--primary-color)] rounded-lg">
+              <div className="text-2xl font-bold text-white">18+</div>
+              <div className="text-xs uppercase tracking-wide text-[var(--accent-color)]">Tools Built</div>
+            </div>
+            <div className="text-center p-4 bg-[var(--primary-color)] rounded-lg">
+              <div className="text-2xl font-bold text-white">100%</div>
+              <div className="text-xs uppercase tracking-wide text-[var(--accent-color)]">Open Source</div>
+            </div>
+            <div className="text-center p-4 bg-[var(--primary-color)] rounded-lg">
+              <div className="text-2xl font-bold text-white">∞</div>
+              <div className="text-xs uppercase tracking-wide text-[var(--accent-color)]">Coffee ☕</div>
+            </div>
+          </div>
+
+          {/* Contact */}
+          <div className="mt-6 text-center">
+            <p className="text-gray-400 text-sm mb-2">
+              Have suggestions or want to collaborate?
+            </p>
+            <a
+              href="mailto:ashikulislamm@gmail.com"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition-colors"
+            >
+              📧 Get in Touch
+            </a>
+          </div>
+        </div>
+
         {/* Footer Note */}
         <footer className="mt-16 text-sm text-gray-500">
           © {new Date().getFullYear()} DevToolbox. Crafted with ❤️ for
