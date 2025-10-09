@@ -17,6 +17,8 @@ import CssGradientGenerator from "./pages/tools/CssGradientGenerator.jsx";
 import CssAnimationGenerator from "./pages/tools/CssAnimationGenerator.jsx";
 import TailwindVisualizer from "./pages/tools/TailwindVisualizer.jsx";
 import ColorPaletteGenerator from "./pages/tools/ColorPaletteGenerator.jsx";
+import MarkdownToHtml from "./pages/tools/MarkdownToHtml.jsx";
+import ResponsiveDesignTester from "./pages/tools/ResponsiveDesignTester.jsx";
 import About from "./pages/About.jsx";
 function App() {
   const [count, setCount] = useState(0);
@@ -63,6 +65,14 @@ function App() {
             <Route
               path="/DevToolsBox/tools/color-palette"
               element={<ColorPaletteGenerator />}
+            />
+            <Route
+              path="/DevToolsBox/tools/markdown-html"
+              element={<MarkdownToHtml />}
+            />
+            <Route
+              path="/DevToolsBox/tools/responsive-design-tester"
+              element={<ResponsiveDesignTester />}
             />
             <Route path="/DevToolsBox/about" element={<About />} />
             <Route path="/DevToolsBox/contact" element={<Contact />} />

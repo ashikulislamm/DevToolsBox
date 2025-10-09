@@ -116,7 +116,7 @@ export const Home = () => {
     {
       id: 15,
       title: "Responsive Design Tester",
-      link: "/DevToolsBox/tools/responsive-tester",
+      link: "/DevToolsBox/tools/responsive-design-tester",
       category: "UI/Frontend Tools",
       icon: "FaMobile"
     },

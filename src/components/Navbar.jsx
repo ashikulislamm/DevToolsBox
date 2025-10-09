@@ -59,8 +59,8 @@ export const Navbar = () => {
       { name: "Color palette", path: "/DevToolsBox/tools/color-palette" },
       { name: "Markdown → HTML", path: "/DevToolsBox/tools/markdown-html" },
       {
-        name: "Responsive tester",
-        path: "/DevToolsBox/tools/responsive-tester",
+        name: "Responsive design tester",
+        path: "/DevToolsBox/tools/responsive-design-tester",
       },
       { name: "SVG → JSX", path: "/DevToolsBox/tools/svg-jsx" },
       { name: "Icon library", path: "/DevToolsBox/tools/icons" },
