@@ -35,12 +35,20 @@ export const Navbar = () => {
         path: "/DevToolsBox/tools/snippet-generator",
       },
       {
-        name: "Dockerfile & .gitignore templates",
+        name: "Dockerfile templates",
         path: "/DevToolsBox/tools/dockerfile",
       },
       {
-        name: "CSS gradient/animation generator",
+        name: "Gitignore templates",
+        path: "/DevToolsBox/tools/gitignore",
+      },
+      {
+        name: "CSS gradient generator",
         path: "/DevToolsBox/tools/css-gradient",
+      },
+      {
+        name: "CSS animation generator",
+        path: "/DevToolsBox/tools/css-animation",
       },
       {
         name: "Tailwind visualizer",
