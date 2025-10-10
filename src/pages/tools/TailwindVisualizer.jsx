@@ -325,7 +325,7 @@ const TailwindVisualizer = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-          <h1 className="text-2xl font-bold text-white">
+          <h1 className="md:text-2xl font-bold text-white ">
             👁️ Tailwind CSS Visualizer
           </h1>
           <div className="flex flex-wrap gap-2 mt-3 sm:mt-0">
@@ -548,8 +548,8 @@ const TailwindVisualizer = () => {
           <div className="space-y-6">
             {/* Live Preview */}
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-yellow-400">
+              <div className="flex items-center justify-between mb-4 md:flex-row flex-col gap-3">
+                <h3 className="text-xl font-bold text-yellow-400 ">
                   Live Preview
                 </h3>
                 <div className="flex items-center gap-2 text-sm text-gray-400">
@@ -569,7 +569,7 @@ const TailwindVisualizer = () => {
 
             {/* Generated HTML */}
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4  md:flex-row flex-col gap-3">
                 <h3 className="text-xl font-bold text-orange-400">
                   Generated HTML
                 </h3>

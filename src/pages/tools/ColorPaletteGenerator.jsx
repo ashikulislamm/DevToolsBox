@@ -475,7 +475,7 @@ const ColorPaletteGenerator = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-          <h1 className="text-2xl font-bold text-white">
+          <h1 className="md:text-2xl font-bold text-white">
             🎨 Color Palette Generator
           </h1>
           <div className="flex flex-wrap gap-2 mt-3 sm:mt-0">
@@ -575,7 +575,7 @@ const ColorPaletteGenerator = () => {
           <div className="xl:col-span-2 space-y-6">
             {/* Color Palette Display */}
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 md:flex-row flex-col gap-3">
                 <h3 className="text-xl font-bold text-purple-400">
                   Color Palette
                 </h3>
@@ -745,7 +745,7 @@ const ColorPaletteGenerator = () => {
 
             {/* Export Preview */}
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 md:flex-row flex-col gap-3">
                 <h3 className="text-xl font-bold text-green-400">
                   Export Preview
                 </h3>

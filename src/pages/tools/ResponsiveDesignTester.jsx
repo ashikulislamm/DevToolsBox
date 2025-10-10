@@ -232,7 +232,7 @@ export default function ResponsiveDesignTester() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
+            <h1 className="md:text-3xl font-bold text-white mb-2 flex items-center gap-3">
               📱 Responsive Design Tester
             </h1>
             <p className="text-gray-300">

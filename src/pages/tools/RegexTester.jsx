@@ -40,7 +40,7 @@ export default function RegexTester() {
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-        <h1 className="text-2xl font-bold text-white">🔍 Regex Tester</h1>
+        <h1 className="md:text-2xl font-bold text-white">🔍 Regex Tester</h1>
         <div className="flex flex-wrap gap-2 mt-3 sm:mt-0">
           <button
             onClick={() => setShowGuide(!showGuide)}

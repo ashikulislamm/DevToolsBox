@@ -161,7 +161,7 @@ export default function Base64Tool() {
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-        <h1 className="text-2xl font-bold text-white">
+        <h1 className="md:text-2xl font-bold text-white">
           🔐 Base64 Encoder / Decoder
         </h1>
         <div className="flex flex-wrap gap-2 mt-3 sm:mt-0">

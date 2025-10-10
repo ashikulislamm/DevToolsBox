@@ -569,12 +569,12 @@ ${keyframeCSS}
               <h3 className="text-xl font-bold mb-4 text-purple-400">
                 Animation Presets
               </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {presets.map((preset, index) => (
                   <button
                     key={index}
                     onClick={() => applyPreset(preset)}
-                    className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium"
+                    className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium"
                   >
                     {preset.name}
                   </button>
@@ -584,8 +584,10 @@ ${keyframeCSS}
 
             {/* Keyframes Editor */}
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-green-400">Keyframes</h3>
+              <div className="flex items-center justify-between mb-4  md:flex-row flex-col">
+                <h3 className="text-xl font-bold text-green-400 md:mb-0 mb-2">
+                  Keyframes
+                </h3>
                 <button
                   onClick={addKeyframe}
                   className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors text-sm"
@@ -681,8 +683,8 @@ ${keyframeCSS}
           <div className="space-y-6">
             {/* Preview */}
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-yellow-400">
+              <div className="flex items-center justify-between mb-4 md:flex-row flex-col">
+                <h3 className="text-xl font-bold text-yellow-400 md:mb-0 mb-2">
                   Live Preview
                 </h3>
                 <div className="flex gap-2">
@@ -737,8 +739,8 @@ ${keyframeCSS}
 
             {/* Generated CSS */}
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-orange-400">
+              <div className="flex items-center justify-between mb-4 md:flex-row flex-col">
+                <h3 className="text-xl font-bold text-orange-400 md:mb-0 mb-2">
                   Generated CSS
                 </h3>
                 <div className="flex gap-2">

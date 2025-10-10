@@ -345,7 +345,7 @@ export default function JsonFormatter() {
       <div className="w-full max-w-6xl mx-auto mt-8 mb-8 p-6 bg-[var(--primary-color)] shadow-lg rounded-2xl border border-gray-200 font-[var(--font-family)]">
         {/* Title Section */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-          <h1 className="text-2xl font-bold text-white">
+          <h1 className="md:text-2xl font-bold text-white">
             🧾 JSON Formatter & Validator
           </h1>
           <div className="flex flex-wrap gap-2 mt-3 sm:mt-0">

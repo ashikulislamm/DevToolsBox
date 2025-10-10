@@ -19,8 +19,8 @@ export default function DockerfileGenerator() {
   const showNotification = (message, type = "success") => {
     const id = Date.now();
     const newNotification = { id, message, type };
-    setNotifications(prev => [...prev, newNotification]);
-    
+    setNotifications((prev) => [...prev, newNotification]);
+
     // Auto remove after 3 seconds
     setTimeout(() => {
       removeNotification(id);
@@ -28,7 +28,9 @@ export default function DockerfileGenerator() {
   };
 
   const removeNotification = (id) => {
-    setNotifications(prev => prev.filter(notification => notification.id !== id));
+    setNotifications((prev) =>
+      prev.filter((notification) => notification.id !== id)
+    );
   };
 
   // Generate Dockerfile
@@ -98,7 +100,11 @@ RUN ${buildCommand}
     // Additional commands
     if (additionalCommands.trim()) {
       dockerfileContent += `# Additional commands
-${additionalCommands.split('\n').map(cmd => cmd.trim() ? `RUN ${cmd}` : '').filter(Boolean).join('\n')}
+${additionalCommands
+  .split("\n")
+  .map((cmd) => (cmd.trim() ? `RUN ${cmd}` : ""))
+  .filter(Boolean)
+  .join("\n")}
 
 `;
     }
@@ -112,7 +118,10 @@ EXPOSE ${port}
     }
 
     // Health check (optional)
-    if (port.trim() && (baseImage.includes('node') || baseImage.includes('nginx'))) {
+    if (
+      port.trim() &&
+      (baseImage.includes("node") || baseImage.includes("nginx"))
+    ) {
       dockerfileContent += `# Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \\
   CMD curl -f http://localhost:${port}/ || exit 1
@@ -122,7 +131,11 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \\
 
     // Start command
     dockerfileContent += `# Define the command to run the application
-CMD ["${startCommand.split(' ')[0]}"${startCommand.split(' ').slice(1).map(arg => `, "${arg}"`).join('')}]`;
+CMD ["${startCommand.split(" ")[0]}"${startCommand
+      .split(" ")
+      .slice(1)
+      .map((arg) => `, "${arg}"`)
+      .join("")}]`;
 
     setDockerfile(dockerfileContent);
     showNotification("🐳 Dockerfile generated successfully!", "success");
@@ -131,13 +144,19 @@ CMD ["${startCommand.split(' ')[0]}"${startCommand.split(' ').slice(1).map(arg =
   // Copy Dockerfile
   const copyDockerfile = async () => {
     if (!dockerfile.trim()) {
-      showNotification("No Dockerfile to copy! Please generate one first.", "error");
+      showNotification(
+        "No Dockerfile to copy! Please generate one first.",
+        "error"
+      );
       return;
     }
-    
+
     try {
       await navigator.clipboard.writeText(dockerfile);
-      showNotification("📋 Dockerfile copied to clipboard successfully!", "success");
+      showNotification(
+        "📋 Dockerfile copied to clipboard successfully!",
+        "success"
+      );
     } catch (err) {
       showNotification("❌ Failed to copy Dockerfile to clipboard", "error");
     }
@@ -192,7 +211,10 @@ CMD ["${startCommand.split(' ')[0]}"${startCommand.split(' ').slice(1).map(arg =
         setCopyDest(".");
         break;
     }
-    showNotification(`📦 Applied ${preset.toUpperCase()} preset configuration`, "success");
+    showNotification(
+      `📦 Applied ${preset.toUpperCase()} preset configuration`,
+      "success"
+    );
   };
 
   // Toast Notification Component
@@ -203,25 +225,49 @@ CMD ["${startCommand.split(' ')[0]}"${startCommand.split(' ').slice(1).map(arg =
     useEffect(() => {
       setTimeout(() => setIsVisible(true), 10);
     }, []);
-    
+
     const getIcon = () => {
       switch (type) {
         case "success":
           return (
-            <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            <svg
+              className="w-5 h-5 text-green-400"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clipRule="evenodd"
+              />
             </svg>
           );
         case "error":
           return (
-            <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            <svg
+              className="w-5 h-5 text-red-400"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clipRule="evenodd"
+              />
             </svg>
           );
         default:
           return (
-            <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            <svg
+              className="w-5 h-5 text-blue-400"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clipRule="evenodd"
+              />
             </svg>
           );
       }
@@ -229,25 +275,31 @@ CMD ["${startCommand.split(' ')[0]}"${startCommand.split(' ').slice(1).map(arg =
 
     const getBgColor = () => {
       switch (type) {
-        case "success": return "bg-green-50 border-green-200";
-        case "error": return "bg-red-50 border-red-200";
-        default: return "bg-blue-50 border-blue-200";
+        case "success":
+          return "bg-green-50 border-green-200";
+        case "error":
+          return "bg-red-50 border-red-200";
+        default:
+          return "bg-blue-50 border-blue-200";
       }
     };
 
     const getTextColor = () => {
       switch (type) {
-        case "success": return "text-green-800";
-        case "error": return "text-red-800";
-        default: return "text-blue-800";
+        case "success":
+          return "text-green-800";
+        case "error":
+          return "text-red-800";
+        default:
+          return "text-blue-800";
       }
     };
 
     return (
-      <div 
+      <div
         className={`flex items-start p-4 mb-3 rounded-lg border ${getBgColor()} ${getTextColor()} transform transition-all duration-300 ease-in-out shadow-lg`}
         style={{
-          transform: isVisible ? 'translateX(0)' : 'translateX(100%)',
+          transform: isVisible ? "translateX(0)" : "translateX(100%)",
           opacity: isVisible ? 1 : 0,
         }}
       >
@@ -258,7 +310,11 @@ CMD ["${startCommand.split(' ')[0]}"${startCommand.split(' ').slice(1).map(arg =
           className={`ml-3 flex-shrink-0 rounded-lg p-1 inline-flex items-center justify-center h-6 w-6 ${getTextColor()} hover:bg-white hover:bg-opacity-30 focus:ring-2 focus:ring-gray-300 focus:outline-none transition-colors`}
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+            <path
+              fillRule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clipRule="evenodd"
+            />
           </svg>
         </button>
       </div>
@@ -277,7 +333,9 @@ CMD ["${startCommand.split(' ')[0]}"${startCommand.split(' ').slice(1).map(arg =
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-        <h1 className="text-2xl font-bold text-white">🐳 Dockerfile Generator</h1>
+        <h1 className="md:text-2xl font-bold text-white">
+          🐳 Dockerfile Generator
+        </h1>
         <div className="flex flex-wrap gap-2 mt-3 sm:mt-0">
           <button
             onClick={() => setShowGuide(!showGuide)}
@@ -315,27 +373,49 @@ CMD ["${startCommand.split(' ')[0]}"${startCommand.split(' ').slice(1).map(arg =
           </h3>
           <div className="space-y-4 text-sm text-gray-300">
             <div>
-              <h4 className="font-medium text-white mb-1">1. Choose Base Image</h4>
-              <p>• <strong>Node.js</strong>: node:18-alpine, node:16-slim</p>
-              <p>• <strong>Python</strong>: python:3.11-slim, python:3.9-alpine</p>
-              <p>• <strong>Nginx</strong>: nginx:alpine, nginx:latest</p>
-              <p>• <strong>PHP</strong>: php:8.1-fpm, php:apache</p>
+              <h4 className="font-medium text-white mb-1">
+                1. Choose Base Image
+              </h4>
+              <p>
+                • <strong>Node.js</strong>: node:18-alpine, node:16-slim
+              </p>
+              <p>
+                • <strong>Python</strong>: python:3.11-slim, python:3.9-alpine
+              </p>
+              <p>
+                • <strong>Nginx</strong>: nginx:alpine, nginx:latest
+              </p>
+              <p>
+                • <strong>PHP</strong>: php:8.1-fpm, php:apache
+              </p>
             </div>
             <div>
-              <h4 className="font-medium text-white mb-1">2. Configure Settings</h4>
+              <h4 className="font-medium text-white mb-1">
+                2. Configure Settings
+              </h4>
               <p>• Set working directory (usually /app)</p>
               <p>• Choose package manager (npm, yarn, pnpm)</p>
               <p>• Specify port number for your application</p>
             </div>
             <div>
               <h4 className="font-medium text-white mb-1">3. Use Presets</h4>
-              <p>• <strong>Node.js</strong>: Basic Node.js application</p>
-              <p>• <strong>React</strong>: React application with build step</p>
-              <p>• <strong>Python</strong>: Python application with pip</p>
-              <p>• <strong>Nginx</strong>: Static file serving</p>
+              <p>
+                • <strong>Node.js</strong>: Basic Node.js application
+              </p>
+              <p>
+                • <strong>React</strong>: React application with build step
+              </p>
+              <p>
+                • <strong>Python</strong>: Python application with pip
+              </p>
+              <p>
+                • <strong>Nginx</strong>: Static file serving
+              </p>
             </div>
             <div className="p-3 bg-blue-900/30 border border-blue-700 rounded">
-              <h4 className="font-medium text-blue-300 mb-1">💡 Best Practices:</h4>
+              <h4 className="font-medium text-blue-300 mb-1">
+                💡 Best Practices:
+              </h4>
               <p>• Use Alpine images for smaller size</p>
               <p>• Copy package files before source code for better caching</p>
               <p>• Use multi-stage builds for production apps</p>
@@ -527,7 +607,9 @@ CMD ["${startCommand.split(' ')[0]}"${startCommand.split(' ').slice(1).map(arg =
 
       {/* Generated Dockerfile */}
       <div className="mt-6">
-        <h3 className="font-semibold mb-2 text-gray-200">Generated Dockerfile:</h3>
+        <h3 className="font-semibold mb-2 text-gray-200">
+          Generated Dockerfile:
+        </h3>
         <textarea
           readOnly
           value={dockerfile}

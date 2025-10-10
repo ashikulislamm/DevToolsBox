@@ -1336,7 +1336,7 @@ GOOGLE_CLIENT_SECRET=your-google-client-secret
 
         {/* HTML Code Output */}
         <div className="mt-6 bg-gray-800 rounded-lg p-4 border border-gray-700">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 md:flex-row flex-col gap-2">
             <h3 className="text-lg font-bold text-orange-400 flex items-center gap-2">
               💻 Generated HTML Code
             </h3>
