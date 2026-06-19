@@ -1,87 +1,92 @@
 import React from "react";
+import { FaArrowRight, FaCode, FaArrowDown } from "react-icons/fa";
 
 export const Hero = () => {
+  // Trigger command palette manually via custom keyboard event
+  const triggerSearchPalette = () => {
+    const event = new KeyboardEvent("keydown", {
+      key: "k",
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    window.dispatchEvent(event);
+  };
+
+  // Scroll down to directory
+  const scrollToDirectory = (e) => {
+    e.preventDefault();
+    const directory = document.querySelector(".container, .max-w-7xl");
+    if (directory) {
+      directory.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
-    <section className="text-white">
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
-      >
-        <div
-          style={{
-            clipPath:
-              "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-          }}
-          className="relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-linear-to-tr from-[#1447E6] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-288.75"
-        />
+    <section className="relative overflow-hidden py-16 sm:py-24 border-b border-slate-200/80 bg-white">
+      {/* Premium Tech Grid & Glow Background */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-45">
+        <svg className="w-full h-full stroke-slate-200/50 [mask-image:radial-gradient(100%_100%_at_top_center,white,transparent)]">
+          <defs>
+            <pattern id="grid-pattern" width="24" height="24" patternUnits="userSpaceOnUse" x="50%">
+              <path d="M.5 24V.5H24" fill="none" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid-pattern)" />
+        </svg>
       </div>
-      <div className="max-w-screen-xl mx-auto px-4 py-16 lg:py-24 text-center">
-        {/* Badge */}
+
+      {/* Decorative Radial Glow Blobs */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-gradient-to-b from-[#847cfa]/15 to-transparent rounded-full blur-3xl -z-10 pointer-events-none" />
+
+      <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+        {/* Release Announcement Badge */}
         <div className="flex justify-center">
-          <span className="inline-flex items-center gap-2 rounded-full bg-[var(--primary-color)] px-1.75 py-1.25 text-sm font-medium text-white-400">
-            <span className="bg-[#9089fc] text-white text-xs px-2 py-0.5 rounded-full">
-              New
+          <span 
+            onClick={triggerSearchPalette}
+            className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-color)]/5 border border-[var(--accent-color)]/20 px-3.5 py-1.25 text-xs font-semibold text-[var(--accent-color)] hover:bg-[var(--accent-color)]/10 transition-colors cursor-pointer select-none shadow-sm"
+          >
+            <span className="bg-[var(--accent-color)] text-white text-[9px] px-2 py-0.5 rounded-full font-brand">
+              PRO
             </span>
-            Dev Tools Box is out now →
+            <span>Version 2.0.0 is live • Press Ctrl+K</span>
+            <FaArrowRight className="w-2.5 h-2.5" />
           </span>
         </div>
 
         {/* Heading */}
-        <h1 className="text-[var(--primary-color)] mt-6 text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl md:text-6xl">
-          The Open Toolbox for Modern Developers
+        <h1 className="text-[var(--primary-color)] mt-8 text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl md:text-6xl font-brand">
+          The Open Toolbox for <br className="hidden sm:inline" />
+          <span className="bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] bg-clip-text text-transparent">
+            Modern Developers
+          </span>
         </h1>
 
         {/* Subtitle */}
-        <p className="mt-6 text-lg sm:text-xl text-[var(--secondary-color)] max-w-4xl mx-auto">
-          A free, open-source hub of utilities designed for everyday coding
-          needs. Whether you’re debugging, testing, or designing—DevToolbox
-          saves you time at every step.
+        <p className="mt-6 text-sm sm:text-base md:text-lg text-[var(--secondary-color)] max-w-2xl mx-auto leading-relaxed">
+          A free, open-source suite of developer utilities designed for everyday coding
+          needs. Format JSON, generate tokens, visualize configurations, and preview assets — secure, client-side, and instant.
         </p>
 
-        {/* Buttons */}
-        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-          <a
-            href="#"
-            className="inline-flex items-center justify-center px-6 py-3 font-bold text-white bg-[var(--accent-color)] rounded-xl"
+        {/* Action Buttons */}
+        <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <button
+            onClick={triggerSearchPalette}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white bg-[var(--accent-color)] hover:bg-[#9790f9] rounded-xl shadow-md transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-98 cursor-pointer select-none text-sm"
           >
-            Get started →
-          </a>
+            <FaCode className="w-3.5 h-3.5" />
+            <span>Search utilities</span>
+          </button>
+          
           <a
-            href="#"
-            className="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-gray-900 bg-white rounded-xl hover:bg-gray-100"
+            href="#directory"
+            onClick={scrollToDirectory}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 hover:border-slate-300 rounded-xl transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-98 cursor-pointer select-none"
           >
-            <svg
-              class="w-6 h-6 text-gray-800"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              fill="none"
-              viewBox="0 0 28 28"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 4H4m0 0v4m0-4 5 5m7-5h4m0 0v4m0-4-5 5M8 20H4m0 0v-4m0 4 5-5m7 5h4m0 0v-4m0 4-5-5"
-              />
-            </svg>
-            Explore Tools
+            <FaArrowDown className="w-3 h-3 text-slate-500" />
+            <span>Browse directory</span>
           </a>
         </div>
-      </div>
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
-      >
-        <div
-          style={{
-            clipPath:
-              "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-          }}
-          className="relative left-[calc(50%+3rem)] aspect-1155/678 w-144.5 -translate-x-1/2 bg-linear-to-tr from-[#1447E6] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-288.75"
-        />
       </div>
     </section>
   );

@@ -1,4 +1,11 @@
 import { useState, useEffect } from "react";
+import { Card, CardHeader } from "../../components/ui/Card.jsx";
+import { Button } from "../../components/ui/Button.jsx";
+import { Textarea } from "../../components/ui/Textarea.jsx";
+import { Select } from "../../components/ui/Select.jsx";
+import { useToast } from "../../context/ToastContext.jsx";
+import { useClipboard } from "../../hooks/useClipboard.js";
+import { FaPalette, FaBook, FaPlus, FaTrash } from "react-icons/fa";
 
 export default function CssGradientGenerator() {
   const [gradientType, setGradientType] = useState("linear");
@@ -9,8 +16,10 @@ export default function CssGradientGenerator() {
     { color: "#4ECDC4", position: 100 },
   ]);
   const [cssCode, setCssCode] = useState("");
-  const [notifications, setNotifications] = useState([]);
   const [showGuide, setShowGuide] = useState(false);
+
+  const { showToast } = useToast();
+  const { copy } = useClipboard();
 
   // Predefined gradient presets
   const presets = [
@@ -131,27 +140,10 @@ export default function CssGradientGenerator() {
     },
   ];
 
-  // Notification functions
-  const showNotification = (message, type = "success") => {
-    const id = Date.now();
-    const newNotification = { id, message, type };
-    setNotifications((prev) => [...prev, newNotification]);
-
-    // Auto remove after 3 seconds
-    setTimeout(() => {
-      removeNotification(id);
-    }, 3000);
-  };
-
-  const removeNotification = (id) => {
-    setNotifications((prev) =>
-      prev.filter((notification) => notification.id !== id)
-    );
-  };
-
   // Generate CSS gradient code
   const generateGradient = () => {
     const colorStops = colors
+      .slice()
       .sort((a, b) => a.position - b.position)
       .map((c) => `${c.color} ${c.position}%`)
       .join(", ");
@@ -178,24 +170,12 @@ export default function CssGradientGenerator() {
   }, [gradientType, direction, angle, colors]);
 
   // Copy CSS to clipboard
-  const copyCss = async () => {
+  const copyCss = () => {
     if (!cssCode.trim()) {
-      showNotification(
-        "No CSS to copy! Please generate a gradient first.",
-        "error"
-      );
+      showToast("❌ No CSS to copy!", "error");
       return;
     }
-
-    try {
-      await navigator.clipboard.writeText(cssCode);
-      showNotification(
-        "🎨 CSS code copied to clipboard successfully!",
-        "success"
-      );
-    } catch (err) {
-      showNotification("❌ Failed to copy CSS to clipboard", "error");
-    }
+    copy(cssCode, "CSS Gradient Styles");
   };
 
   // Add new color stop
@@ -204,20 +184,22 @@ export default function CssGradientGenerator() {
       colors.length > 0 ? Math.max(...colors.map((c) => c.position)) + 10 : 50;
     setColors([
       ...colors,
-      { color: "#000000", position: Math.min(newPosition, 100) },
+      { color: "#847CFA", position: Math.min(newPosition, 100) },
     ]);
+    showToast("Added new color swatch", "success");
   };
 
   // Remove color stop
   const removeColor = (index) => {
     if (colors.length > 2) {
       setColors(colors.filter((_, i) => i !== index));
+      showToast("Removed color swatch", "success");
     } else {
-      showNotification("You need at least 2 colors for a gradient!", "error");
+      showToast("❌ You need at least 2 colors for a gradient!", "error");
     }
   };
 
-  // Update color
+  // Update color stop parameter
   const updateColor = (index, field, value) => {
     const newColors = [...colors];
     newColors[index][field] = value;
@@ -229,10 +211,10 @@ export default function CssGradientGenerator() {
     setGradientType(preset.type);
     setDirection(preset.direction);
     setColors(preset.colors);
-    showNotification(`🎨 Applied "${preset.name}" preset!`, "success");
+    showToast(`🎨 Applied "${preset.name}" preset!`, "success");
   };
 
-  // Clear all
+  // Clear workspace
   const clearAll = () => {
     setGradientType("linear");
     setDirection("to right");
@@ -241,419 +223,238 @@ export default function CssGradientGenerator() {
       { color: "#FF6B6B", position: 0 },
       { color: "#4ECDC4", position: 100 },
     ]);
-    setCssCode("");
-  };
-
-  // Toast Notification Component
-  const ToastNotification = ({ notification, onRemove }) => {
-    const { id, message, type } = notification;
-    const [isVisible, setIsVisible] = useState(false);
-
-    useEffect(() => {
-      setTimeout(() => setIsVisible(true), 10);
-    }, []);
-
-    const getIcon = () => {
-      switch (type) {
-        case "success":
-          return (
-            <svg
-              className="w-5 h-5 text-green-400"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clipRule="evenodd"
-              />
-            </svg>
-          );
-        case "error":
-          return (
-            <svg
-              className="w-5 h-5 text-red-400"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                clipRule="evenodd"
-              />
-            </svg>
-          );
-        default:
-          return (
-            <svg
-              className="w-5 h-5 text-blue-400"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                clipRule="evenodd"
-              />
-            </svg>
-          );
-      }
-    };
-
-    const getBgColor = () => {
-      switch (type) {
-        case "success":
-          return "bg-green-50 border-green-200";
-        case "error":
-          return "bg-red-50 border-red-200";
-        default:
-          return "bg-blue-50 border-blue-200";
-      }
-    };
-
-    const getTextColor = () => {
-      switch (type) {
-        case "success":
-          return "text-green-800";
-        case "error":
-          return "text-red-800";
-        default:
-          return "text-blue-800";
-      }
-    };
-
-    return (
-      <div
-        className={`flex items-start p-4 mb-3 rounded-lg border ${getBgColor()} ${getTextColor()} transform transition-all duration-300 ease-in-out shadow-lg`}
-        style={{
-          transform: isVisible ? "translateX(0)" : "translateX(100%)",
-          opacity: isVisible ? 1 : 0,
-        }}
-      >
-        <div className="flex-shrink-0 mt-0.5">{getIcon()}</div>
-        <div className="ml-3 text-sm font-medium flex-1 min-w-0">{message}</div>
-        <button
-          onClick={() => onRemove(id)}
-          className={`ml-3 flex-shrink-0 rounded-lg p-1 inline-flex items-center justify-center h-6 w-6 ${getTextColor()} hover:bg-white hover:bg-opacity-30 focus:ring-2 focus:ring-gray-300 focus:outline-none transition-colors`}
-        >
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path
-              fillRule="evenodd"
-              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </button>
-      </div>
-    );
+    showToast("Cleared gradient workspace", "success");
   };
 
   return (
-    <div
-      className="w-full max-w-7xl mx-auto mt-8 mb-8 p-6 rounded-2xl shadow-sm border"
-      style={{
-        backgroundColor: "var(--primary-color)",
-        color: "#fff",
-        borderColor: "var(--secondary-color)",
-        fontFamily: "var(--font-family)",
-      }}
-    >
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-        <h1 className="md:text-2xl font-bold text-white">
-          🎨 CSS Gradient Generator
-        </h1>
-        <div className="flex flex-wrap gap-2 mt-3 sm:mt-0">
-          <button
-            onClick={() => setShowGuide(!showGuide)}
-            className="px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-700"
-          >
-            {showGuide ? "Hide Guide" : "Show Guide"}
-          </button>
-          <button
-            onClick={copyCss}
-            className="px-3 py-1.5 rounded-lg text-sm font-medium"
-            style={{ backgroundColor: "var(--accent-color)" }}
-          >
-            Copy CSS
-          </button>
-          <button
-            onClick={clearAll}
-            className="px-3 py-1.5 rounded-lg text-sm font-medium bg-red-600 hover:bg-red-700"
-          >
-            Clear
-          </button>
-        </div>
-      </div>
+    <div className="w-full max-w-6xl mx-auto px-4 py-8">
+      <Card glow={true}>
+        {/* Header Actions */}
+        <CardHeader
+          title="CSS Gradient Generator"
+          icon={<FaPalette />}
+          actions={
+            <>
+              <Button onClick={() => setShowGuide(!showGuide)} variant="outline" size="sm" icon={<FaBook />}>
+                {showGuide ? "Hide Guide" : "Show Guide"}
+              </Button>
+              <Button onClick={copyCss} variant="primary" size="sm">
+                Copy CSS
+              </Button>
+              <Button onClick={clearAll} variant="danger" size="sm">
+                Clear
+              </Button>
+            </>
+          }
+        />
 
-      {/* Usage Guide */}
-      {showGuide && (
-        <div className="mt-6 p-4 bg-gray-800 rounded-lg border border-gray-600">
-          <h3 className="font-semibold mb-3 text-blue-300 flex items-center">
-            📚 How to Use CSS Gradient Generator
-          </h3>
-          <div className="space-y-4 text-sm text-gray-300">
-            <div>
-              <h4 className="font-medium text-white mb-1">
-                1. Choose Gradient Type
-              </h4>
-              <p>
-                • <strong>Linear</strong>: Straight line gradients (most common)
-              </p>
-              <p>
-                • <strong>Radial</strong>: Circular/elliptical gradients from
-                center
-              </p>
-              <p>
-                • <strong>Conic</strong>: Circular gradients around a point
-                (modern browsers)
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-white mb-1">2. Set Direction</h4>
-              <p>
-                • <strong>Linear</strong>: to right, to bottom, 45deg, etc.
-              </p>
-              <p>
-                • <strong>Radial</strong>: circle, ellipse, circle at center,
-                etc.
-              </p>
-              <p>
-                • <strong>Conic</strong>: from angle, at position
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-white mb-1">
-                3. Add & Customize Colors
-              </h4>
-              <p>• Click color swatches to change colors</p>
-              <p>• Adjust position sliders to control color placement</p>
-              <p>• Add more colors with "Add Color" button</p>
-              <p>• Remove colors (minimum 2 required)</p>
-            </div>
-            <div className="p-3 bg-blue-900/30 border border-blue-700 rounded">
-              <h4 className="font-medium text-blue-300 mb-1">💡 Pro Tips:</h4>
-              <p>• Use 2-3 colors for clean, professional gradients</p>
-              <p>• Consider color harmony and contrast</p>
-              <p>• Test gradients on different background colors</p>
-              <p>• Use gradients for buttons, cards, and hero sections</p>
+        {/* Usage Guide */}
+        {showGuide && (
+          <div className="mb-6 p-5 bg-slate-900 border border-slate-800 rounded-xl space-y-4 text-xs select-text leading-relaxed">
+            <h3 className="font-bold text-slate-200 text-sm flex items-center gap-2 font-brand select-none">
+              📚 CSS Gradient Guide
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <p>• <strong>Linear Gradients:</strong> Smooth color transitions along a straight path. Control directions via presets (To Right, To Bottom) or custom angles.</p>
+                <p>• <strong>Radial Gradients:</strong> Color transitions emanating outwards in a circular or elliptical pattern from a central point.</p>
+              </div>
+              <div className="space-y-2">
+                <p>• <strong>Conic Gradients:</strong> Colors rotate around a central origin point, creating a wheel/cone layout effect.</p>
+                <p>• <strong>Position stops:</strong> Drag the position range bar to tweak how close colors merge into adjacent color ranges.</p>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Presets */}
-      <div className="mt-6 p-4 bg-gray-800 rounded-lg border border-gray-600">
-        <h3 className="font-semibold mb-3 text-gray-200">Quick Presets:</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2">
-          {presets.map((preset, index) => {
-            const colorStops = preset.colors
-              .map((c) => `${c.color} ${c.position}%`)
-              .join(", ");
-            let gradientStyle = "";
+        {/* Presets List */}
+        <div className="bg-slate-950/40 border border-slate-800/80 rounded-xl p-5 mb-6">
+          <label className="block text-[11px] font-semibold text-slate-400 font-brand mb-3 select-none">
+            Quick Preset Backgrounds:
+          </label>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
+            {presets.map((preset, index) => {
+              const colorStops = preset.colors
+                .map((c) => `${c.color} ${c.position}%`)
+                .join(", ");
+              let gradientStyle = "";
 
-            if (preset.type === "linear") {
-              gradientStyle = `linear-gradient(${preset.direction}, ${colorStops})`;
-            } else if (preset.type === "radial") {
-              gradientStyle = `radial-gradient(${preset.direction}, ${colorStops})`;
-            } else if (preset.type === "conic") {
-              gradientStyle = `conic-gradient(${preset.direction}, ${colorStops})`;
-            }
+              if (preset.type === "linear") {
+                gradientStyle = `linear-gradient(${preset.direction}, ${colorStops})`;
+              } else if (preset.type === "radial") {
+                gradientStyle = `radial-gradient(${preset.direction}, ${colorStops})`;
+              } else if (preset.type === "conic") {
+                gradientStyle = `conic-gradient(${preset.direction}, ${colorStops})`;
+              }
 
-            return (
-              <button
-                key={index}
-                onClick={() => applyPreset(preset)}
-                className="relative p-2 rounded-lg text-xs font-medium text-white hover:scale-105 transition-transform border border-gray-600 hover:border-gray-400"
-                style={{ background: gradientStyle }}
-              >
-                <div className="bg-black bg-opacity-50 rounded px-2 py-1">
-                  {preset.name}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-        {/* Controls */}
-        <div className="space-y-4">
-          {/* Gradient Type */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Gradient Type
-            </label>
-            <select
-              value={gradientType}
-              onChange={(e) => setGradientType(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded-md text-sm text-gray-100 outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="linear">Linear</option>
-              <option value="radial">Radial</option>
-              <option value="conic">Conic</option>
-            </select>
+              return (
+                <button
+                  key={index}
+                  onClick={() => applyPreset(preset)}
+                  className="relative p-2.5 rounded-lg text-xs font-semibold text-white hover:scale-[1.02] active:scale-95 transition-all border border-slate-800/80 cursor-pointer overflow-hidden min-h-[40px] flex items-center justify-center"
+                  style={{ background: gradientStyle }}
+                >
+                  <span className="bg-black/60 backdrop-blur-xs rounded px-2 py-0.5 text-[9px] tracking-tight">
+                    {preset.name}
+                  </span>
+                </button>
+              );
+            })}
           </div>
+        </div>
 
-          {/* Direction */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Direction
-            </label>
-            <select
-              value={direction}
-              onChange={(e) => setDirection(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded-md text-sm text-gray-100 outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {gradientType === "linear" && (
-                <>
-                  <option value="to right">To Right</option>
-                  <option value="to left">To Left</option>
-                  <option value="to bottom">To Bottom</option>
-                  <option value="to top">To Top</option>
-                  <option value="to bottom right">To Bottom Right</option>
-                  <option value="to bottom left">To Bottom Left</option>
-                  <option value="to top right">To Top Right</option>
-                  <option value="to top left">To Top Left</option>
-                  <option value="custom">Custom Angle</option>
-                </>
-              )}
-              {gradientType === "radial" && (
-                <>
-                  <option value="circle">Circle</option>
-                  <option value="ellipse">Ellipse</option>
-                  <option value="circle at center">Circle at Center</option>
-                  <option value="circle at top">Circle at Top</option>
-                  <option value="circle at bottom">Circle at Bottom</option>
-                  <option value="circle at left">Circle at Left</option>
-                  <option value="circle at right">Circle at Right</option>
-                </>
-              )}
-              {gradientType === "conic" && (
-                <>
-                  <option value="from 0deg">From 0deg</option>
-                  <option value="from 45deg">From 45deg</option>
-                  <option value="from 90deg">From 90deg</option>
-                  <option value="from 180deg">From 180deg</option>
-                  <option value="custom">Custom Angle</option>
-                </>
-              )}
-            </select>
-          </div>
+        {/* Workspace Columns */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Controls Left Column */}
+          <div className="space-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Select
+                label="Gradient Type:"
+                id="gradient-type"
+                value={gradientType}
+                onChange={(e) => setGradientType(e.target.value)}
+                options={[
+                  { value: "linear", label: "Linear" },
+                  { value: "radial", label: "Radial" },
+                  { value: "conic", label: "Conic" },
+                ]}
+              />
 
-          {/* Custom Angle */}
-          {direction === "custom" && (
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Angle: {angle}°
-              </label>
-              <input
-                type="range"
-                min="0"
-                max="360"
-                value={angle}
-                onChange={(e) => setAngle(parseInt(e.target.value))}
-                className="w-full"
+              <Select
+                label="Direction / Shape:"
+                id="gradient-direction"
+                value={direction}
+                onChange={(e) => setDirection(e.target.value)}
+                options={
+                  gradientType === "linear"
+                    ? [
+                        { value: "to right", label: "To Right" },
+                        { value: "to left", label: "To Left" },
+                        { value: "to bottom", label: "To Bottom" },
+                        { value: "to top", label: "To Top" },
+                        { value: "to bottom right", label: "To Bottom Right" },
+                        { value: "to bottom left", label: "To Bottom Left" },
+                        { value: "to top right", label: "To Top Right" },
+                        { value: "to top left", label: "To Top Left" },
+                        { value: "custom", label: "Custom Angle" },
+                      ]
+                    : gradientType === "radial"
+                    ? [
+                        { value: "circle", label: "Circle" },
+                        { value: "ellipse", label: "Ellipse" },
+                        { value: "circle at center", label: "Circle at Center" },
+                        { value: "circle at top", label: "Circle at Top" },
+                        { value: "circle at bottom", label: "Circle at Bottom" },
+                        { value: "circle at left", label: "Circle at Left" },
+                        { value: "circle at right", label: "Circle at Right" },
+                      ]
+                    : [
+                        { value: "from 0deg", label: "From 0deg" },
+                        { value: "from 45deg", label: "From 45deg" },
+                        { value: "from 90deg", label: "From 90deg" },
+                        { value: "from 180deg", label: "From 180deg" },
+                        { value: "custom", label: "Custom Angle" },
+                      ]
+                }
               />
             </div>
-          )}
 
-          {/* Colors */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-medium text-gray-300">
-                Colors ({colors.length})
-              </label>
-              <button
-                onClick={addColor}
-                className="px-2 py-1 text-xs bg-green-600 hover:bg-green-700 rounded-md"
-              >
-                Add Color
-              </button>
-            </div>
-            <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar">
-              {colors.map((color, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-3 p-3 bg-gray-700 rounded-lg"
-                >
-                  <input
-                    type="color"
-                    value={color.color}
-                    onChange={(e) =>
-                      updateColor(index, "color", e.target.value)
-                    }
-                    className="w-12 h-8 rounded cursor-pointer"
-                  />
-                  <div className="flex-1">
-                    <label className="block text-xs text-gray-400 mb-1">
-                      Position: {color.position}%
-                    </label>
-                    <input
-                      type="range"
-                      min="0"
-                      max="100"
-                      value={color.position}
-                      onChange={(e) =>
-                        updateColor(index, "position", parseInt(e.target.value))
-                      }
-                      className="w-full"
-                    />
-                  </div>
-                  <button
-                    onClick={() => removeColor(index)}
-                    disabled={colors.length <= 2}
-                    className="px-2 py-1 text-xs bg-red-600 hover:bg-red-700 rounded-md disabled:bg-gray-600 disabled:cursor-not-allowed"
-                  >
-                    Remove
-                  </button>
+            {/* Custom Angle Range */}
+            {direction === "custom" && (
+              <div className="bg-slate-950/40 border border-slate-800/80 rounded-xl p-4">
+                <div className="flex justify-between text-[11px] font-semibold text-slate-400 font-brand mb-1 select-none">
+                  <span>Angle:</span>
+                  <span className="text-[var(--accent-color)]">{angle}°</span>
                 </div>
-              ))}
+                <input
+                  type="range"
+                  min="0"
+                  max="360"
+                  value={angle}
+                  onChange={(e) => setAngle(parseInt(e.target.value))}
+                  className="w-full h-1 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-[var(--accent-color)]"
+                />
+              </div>
+            )}
+
+            {/* Colors Swatches Editor */}
+            <div className="bg-slate-950/40 border border-slate-800/80 rounded-xl p-5">
+              <div className="flex items-center justify-between mb-4 select-none">
+                <label className="block text-[11px] font-semibold text-slate-400 font-brand">
+                  Color Swatches ({colors.length})
+                </label>
+                <Button onClick={addColor} variant="primary" size="sm" icon={<FaPlus />}>
+                  Add Color
+                </Button>
+              </div>
+
+              <div className="space-y-3 max-h-60 overflow-y-auto custom-scrollbar pr-2">
+                {colors.map((color, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 p-3 bg-slate-900 border border-slate-800/60 rounded-xl"
+                  >
+                    <input
+                      type="color"
+                      value={color.color}
+                      onChange={(e) => updateColor(index, "color", e.target.value)}
+                      className="w-10 h-8 rounded border border-slate-850 cursor-pointer bg-transparent"
+                    />
+                    <div className="flex-1">
+                      <div className="flex justify-between text-[10px] text-slate-400 font-brand mb-1 select-none">
+                        <span>Hex: <span className="font-mono text-white select-all">{color.color.toUpperCase()}</span></span>
+                        <span>Stop: <span className="text-[var(--accent-color)] font-bold">{color.position}%</span></span>
+                      </div>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={color.position}
+                        onChange={(e) => updateColor(index, "position", parseInt(e.target.value))}
+                        className="w-full h-1 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-[var(--accent-color)]"
+                      />
+                    </div>
+                    <button
+                      onClick={() => removeColor(index)}
+                      disabled={colors.length <= 2}
+                      className="p-2 bg-slate-950 hover:bg-rose-950 hover:text-rose-400 text-slate-500 rounded-lg border border-slate-850 hover:border-rose-900/60 transition-colors disabled:opacity-30 disabled:hover:bg-slate-950 disabled:hover:text-slate-500 disabled:hover:border-slate-850 disabled:cursor-not-allowed cursor-pointer"
+                      title="Remove color swatch"
+                    >
+                      <FaTrash className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Viewport Preview & CSS Outputs Right Column */}
+          <div className="space-y-5">
+            {/* Live Preview block */}
+            <div className="bg-slate-950/40 border border-slate-800/80 rounded-xl p-5">
+              <label className="block text-[11px] font-semibold text-slate-400 font-brand mb-3 select-none">
+                Live Output Preview
+              </label>
+              <div
+                className="w-full h-64 rounded-xl border border-slate-800/80 shadow-inner"
+                style={{ background: generateGradient() }}
+              />
+            </div>
+
+            {/* Generated CSS codebox */}
+            <div>
+              <Textarea
+                label="Generated CSS code:"
+                id="gradient-css"
+                value={cssCode}
+                readOnly={true}
+                placeholder="Gradient background CSS style rules..."
+                rows={4}
+              />
             </div>
           </div>
         </div>
-
-        {/* Preview and CSS */}
-        <div className="space-y-4">
-          {/* Preview */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Preview
-            </label>
-            <div
-              className="w-full h-64 rounded-lg border border-gray-600"
-              style={{ background: generateGradient() }}
-            ></div>
-          </div>
-
-          {/* CSS Code */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              CSS Code
-            </label>
-            <textarea
-              readOnly
-              value={cssCode}
-              className="w-full h-32 p-3 border rounded-lg font-mono text-sm bg-gray-900 text-gray-100 resize-none custom-scrollbar"
-              style={{ borderColor: "var(--secondary-color)" }}
-              placeholder="Generated CSS will appear here..."
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Toast Notifications Container */}
-      {notifications.length > 0 && (
-        <div className="fixed top-4 right-4 z-50 space-y-2 max-w-sm w-full">
-          {notifications.map((notification) => (
-            <ToastNotification
-              key={notification.id}
-              notification={notification}
-              onRemove={removeNotification}
-            />
-          ))}
-        </div>
-      )}
+      </Card>
     </div>
   );
 }

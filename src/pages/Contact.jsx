@@ -1,300 +1,226 @@
-// src/pages/ContactPage.jsx
 import { useState } from "react";
-import { HiBuildingOffice2, HiMapPin, HiPhone } from "react-icons/hi2";
+import { HiBuildingOffice2, HiMapPin, HiPhone, HiEnvelope } from "react-icons/hi2";
+import { FaPaperPlane, FaGithub, FaTwitter, FaLinkedin, FaDribbble, FaInfoCircle } from "react-icons/fa";
 
 export function Contact() {
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
-    phone: "",
+    email: "",
+    company: "",
     message: "",
-    agree: false,
   });
 
   const onChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm((f) => ({ ...f, [name]: type === "checkbox" ? checked : value }));
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    // TODO: send to backend
-    console.log("contact form:", form);
-    alert("Message sent (demo). Hook this up to your API!");
+    console.log("contact form submitted:", form);
+    alert("🚀 Message received! In a production environment, this form would trigger an API call. Thanks for checking out the demo!");
+    setForm({
+      firstName: "",
+      lastName: "",
+      email: "",
+      company: "",
+      message: "",
+    });
   };
 
   return (
-    <>
-      <section className="bg-[#0F172A] text-white py-12 px-6 mt-20 rounded-lg">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
-          {/* Company Info */}
-          <div>
-            <div className="flex justify-center mb-4">
-              <div className="bg-gray-800 p-3 rounded-md">
-                <HiBuildingOffice2 className="text-white text-3xl" />
-              </div>
-            </div>
-            <h3 className="font-bold text-lg mb-1">Company information</h3>
-            <p>DevTools Box LLC</p>
-          </div>
+    <div className="relative overflow-hidden py-16 sm:py-24">
+      {/* Background Grid Pattern */}
+      <div className="absolute inset-0 pointer-events-none opacity-30 z-0">
+        <svg className="w-full h-full stroke-slate-200/50 [mask-image:radial-gradient(100%_100%_at_top_center,white,transparent)]">
+          <defs>
+            <pattern id="contact-grid" width="32" height="32" patternUnits="userSpaceOnUse" x="50%">
+              <path d="M.5 32V.5H32" fill="none" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#contact-grid)" />
+        </svg>
+      </div>
 
-          {/* Address */}
-          <div>
-            <div className="flex justify-center mb-4">
-              <div className="bg-gray-800 p-3 rounded-md">
-                <HiMapPin className="text-white text-3xl" />
-              </div>
-            </div>
-            <h3 className="font-bold text-lg mb-1">Address</h3>
-            <p>Khilgoan, Dhaka</p>
-            <p>Bangladesh , 1204</p>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <div className="flex justify-center mb-4">
-              <div className="bg-gray-800 p-3 rounded-md">
-                <HiPhone className="text-white text-3xl" />
-              </div>
-            </div>
-            <h3 className="font-bold text-lg mb-1">Email us</h3>
-            <p>Email us for general queries</p>
-            <p className="text-[#7886c7] font-semibold mt-1">
-              hello@devtoolsbox.com
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <div className="relative rounded-lg bg-gray-900 px-6 mt-8 mb-8 py-24 sm:py-32 lg:px-8 overflow-hidden">
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 pointer-events-none"
-        >
-          <div
-            style={{
-              clipPath:
-                "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-            }}
-            className="relative left-1/2 -z-10 aspect-[1155/678] w-[72.1875rem] max-w-none -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-20 sm:left-[calc(50%-40rem)] sm:w-[90rem]"
-          />
-        </div>
-        <div className="relative mx-auto max-w-2xl text-center z-10">
-          <h2 className="text-4xl font-semibold tracking-tight text-balance text-white sm:text-5xl">
-            Contact Me
-          </h2>
-          <p className="mt-2 text-lg/8 text-gray-400">
-            Aute magna irure deserunt veniam aliqua magna enim voluptate.
-          </p>
-        </div>
-        <form
-          action="#"
-          method="POST"
-          className="relative mx-auto mt-16 max-w-xl sm:mt-20 z-10"
-        >
-          <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          
+          {/* Left Column: Direct Contact Info (Span 5) */}
+          <div className="lg:col-span-5 space-y-8 lg:pr-6">
             <div>
-              <label
-                htmlFor="first-name"
-                className="block text-sm/6 font-semibold text-white"
-              >
-                First name
-              </label>
-              <div className="mt-2.5">
-                <input
-                  id="first-name"
-                  name="first-name"
-                  type="text"
-                  autoComplete="given-name"
-                  className="block w-full rounded-md bg-white/5 px-3.5 py-2 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500"
-                />
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--accent-color)]/10 text-[var(--accent-color)] border border-[var(--accent-color)]/20 px-3.5 py-1 text-xs font-semibold select-none shadow-sm">
+                <FaInfoCircle className="w-3.5 h-3.5" />
+                <span>Contact support or feedback</span>
+              </span>
+              <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight font-brand mt-6">
+                Get in Touch
+              </h1>
+              <p className="text-slate-500 text-sm sm:text-base leading-relaxed mt-4">
+                Have ideas on how to improve DevToolsBox or want to report a broken formatter? Drop us a message. We value all developer feedback!
+              </p>
+            </div>
+
+            {/* Visual Cards Coordinates */}
+            <div className="space-y-4">
+              {/* Card 1 */}
+              <div className="flex items-start gap-4 p-4 bg-white border border-slate-200/80 rounded-2xl shadow-xs hover:border-slate-300 transition-colors">
+                <div className="bg-[#847cfa]/10 p-2.5 rounded-xl border border-[#847cfa]/20 shrink-0 mt-0.5">
+                  <HiBuildingOffice2 className="text-[var(--accent-color)] text-xl" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-xs text-slate-900 font-brand">Company Details</h4>
+                  <p className="text-slate-500 text-xs mt-0.5">DevToolsBox LLC</p>
+                </div>
+              </div>
+
+              {/* Card 2 */}
+              <div className="flex items-start gap-4 p-4 bg-white border border-slate-200/80 rounded-2xl shadow-xs hover:border-slate-300 transition-colors">
+                <div className="bg-[#847cfa]/10 p-2.5 rounded-xl border border-[#847cfa]/20 shrink-0 mt-0.5">
+                  <HiMapPin className="text-[var(--accent-color)] text-xl" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-xs text-slate-900 font-brand">Location</h4>
+                  <p className="text-slate-500 text-xs mt-0.5">Khilgaon, Dhaka, Bangladesh, 1204</p>
+                </div>
+              </div>
+
+              {/* Card 3 */}
+              <div className="flex items-start gap-4 p-4 bg-white border border-slate-200/80 rounded-2xl shadow-xs hover:border-slate-300 transition-colors">
+                <div className="bg-[#847cfa]/10 p-2.5 rounded-xl border border-[#847cfa]/20 shrink-0 mt-0.5">
+                  <HiEnvelope className="text-[var(--accent-color)] text-xl" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-xs text-slate-900 font-brand">Email Channel</h4>
+                  <p className="text-[var(--accent-color)] text-xs font-semibold mt-0.5">hello@devtoolsbox.com</p>
+                </div>
               </div>
             </div>
-            <div>
-              <label
-                htmlFor="last-name"
-                className="block text-sm/6 font-semibold text-white"
-              >
-                Last name
-              </label>
-              <div className="mt-2.5">
-                <input
-                  id="last-name"
-                  name="last-name"
-                  type="text"
-                  autoComplete="family-name"
-                  className="block w-full rounded-md bg-white/5 px-3.5 py-2 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500"
-                />
+
+            {/* Social Grid */}
+            <div className="pt-2">
+              <h5 className="text-[10px] uppercase font-bold tracking-wider text-slate-400 font-brand mb-3">Follow Updates</h5>
+              <div className="flex gap-2">
+                <a href="https://github.com/ashikulislamm" target="_blank" rel="noopener noreferrer" className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 rounded-xl border border-slate-200 transition-colors text-sm" title="GitHub">
+                  <FaGithub />
+                </a>
+                <a href="#" className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 rounded-xl border border-slate-200 transition-colors text-sm" title="Twitter">
+                  <FaTwitter />
+                </a>
+                <a href="#" className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 rounded-xl border border-slate-200 transition-colors text-sm" title="LinkedIn">
+                  <FaLinkedin />
+                </a>
+                <a href="#" className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 rounded-xl border border-slate-200 transition-colors text-sm" title="Dribbble">
+                  <FaDribbble />
+                </a>
               </div>
             </div>
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="company"
-                className="block text-sm/6 font-semibold text-white"
-              >
-                Company
-              </label>
-              <div className="mt-2.5">
-                <input
-                  id="company"
-                  name="company"
-                  type="text"
-                  autoComplete="organization"
-                  className="block w-full rounded-md bg-white/5 px-3.5 py-2 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500"
-                />
+          </div>
+
+          {/* Right Column: Contact Message Panel (Span 7) */}
+          <div className="lg:col-span-7 bg-[#0F172A] border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden text-white w-full">
+            {/* Soft Backing Glow */}
+            <div className="absolute top-0 right-0 w-72 h-72 bg-[var(--accent-color)]/5 rounded-full blur-3xl -z-10 pointer-events-none" />
+
+            <h3 className="text-lg font-bold text-white mb-6 font-brand border-b border-slate-800 pb-4 flex items-center gap-2 select-none">
+              <span>✉️</span> Send a Message
+            </h3>
+
+            <form onSubmit={onSubmit} className="space-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="firstName" className="block text-[11px] font-semibold text-slate-400">
+                    First Name
+                  </label>
+                  <input
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    required
+                    value={form.firstName}
+                    onChange={onChange}
+                    className="mt-2 block w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2.5 text-xs text-white placeholder:text-slate-700 focus:border-[var(--accent-color)] focus:ring-2 focus:ring-[var(--accent-color)]/25 outline-none transition-all"
+                    placeholder="Jane"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="lastName" className="block text-[11px] font-semibold text-slate-400">
+                    Last Name
+                  </label>
+                  <input
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    required
+                    value={form.lastName}
+                    onChange={onChange}
+                    className="mt-2 block w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2.5 text-xs text-white placeholder:text-slate-700 focus:border-[var(--accent-color)] focus:ring-2 focus:ring-[var(--accent-color)]/25 outline-none transition-all"
+                    placeholder="Doe"
+                  />
+                </div>
               </div>
-            </div>
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="email"
-                className="block text-sm/6 font-semibold text-white"
-              >
-                Email
-              </label>
-              <div className="mt-2.5">
+
+              <div>
+                <label htmlFor="email" className="block text-[11px] font-semibold text-slate-400">
+                  Email Address
+                </label>
                 <input
                   id="email"
                   name="email"
                   type="email"
-                  autoComplete="email"
-                  className="block w-full rounded-md bg-white/5 px-3.5 py-2 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500"
+                  required
+                  value={form.email}
+                  onChange={onChange}
+                  className="mt-2 block w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2.5 text-xs text-white placeholder:text-slate-700 focus:border-[var(--accent-color)] focus:ring-2 focus:ring-[var(--accent-color)]/25 outline-none transition-all"
+                  placeholder="jane.doe@example.com"
                 />
               </div>
-            </div>
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="phone-number"
-                className="block text-sm/6 font-semibold text-white"
-              >
-                Phone number
-              </label>
-              <div className="mt-2.5">
-                <div className="flex rounded-md bg-white/5 outline-1 -outline-offset-1 outline-white/10 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-500">
-                  <div className="grid shrink-0 grid-cols-1 focus-within:relative">
-                    <select
-                      id="country"
-                      name="country"
-                      autoComplete="country"
-                      aria-label="Country"
-                      className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-transparent py-2 pr-7 pl-3.5 text-base text-gray-400 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                    >
-                      <option>US</option>
-                      <option>CA</option>
-                      <option>EU</option>
-                    </select>
-                  </div>
-                  <input
-                    id="phone-number"
-                    name="phone-number"
-                    type="text"
-                    placeholder="123-456-7890"
-                    className="block min-w-0 grow bg-transparent py-1.5 pr-3 pl-1 text-base text-white placeholder:text-gray-500 focus:outline-none sm:text-sm/6"
-                  />
-                </div>
+
+              <div>
+                <label htmlFor="company" className="block text-[11px] font-semibold text-slate-400">
+                  Company (Optional)
+                </label>
+                <input
+                  id="company"
+                  name="company"
+                  type="text"
+                  value={form.company}
+                  onChange={onChange}
+                  className="mt-2 block w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2.5 text-xs text-white placeholder:text-slate-700 focus:border-[var(--accent-color)] focus:ring-2 focus:ring-[var(--accent-color)]/25 outline-none transition-all"
+                  placeholder="Acme Corp"
+                />
               </div>
-            </div>
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="message"
-                className="block text-sm/6 font-semibold text-white"
-              >
-                Message
-              </label>
-              <div className="mt-2.5">
+
+              <div>
+                <label htmlFor="message" className="block text-[11px] font-semibold text-slate-400">
+                  Your Message
+                </label>
                 <textarea
                   id="message"
                   name="message"
+                  required
                   rows={4}
-                  className="block w-full rounded-md bg-white/5 px-3.5 py-2 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500"
-                  defaultValue={""}
+                  value={form.message}
+                  onChange={onChange}
+                  className="mt-2 block w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2.5 text-xs text-white placeholder:text-slate-700 focus:border-[var(--accent-color)] focus:ring-2 focus:ring-[var(--accent-color)]/25 outline-none transition-all resize-none custom-scrollbar"
+                  placeholder="Tell us about feedback or bugs..."
                 />
               </div>
-            </div>
-            <div className="flex gap-x-4 sm:col-span-2">
-              <div className="flex h-6 items-center">
-                <div className="group relative inline-flex w-8 shrink-0 rounded-full bg-white/5 p-px inset-ring inset-ring-white/10 outline-offset-2 outline-indigo-500 transition-colors duration-200 ease-in-out has-checked:bg-indigo-500 has-focus-visible:outline-2">
-                  <span className="size-4 rounded-full bg-white shadow-xs ring-1 ring-gray-900/5 transition-transform duration-200 ease-in-out group-has-checked:translate-x-3.5" />
-                  <input
-                    id="agree-to-policies"
-                    name="agree-to-policies"
-                    type="checkbox"
-                    aria-label="Agree to policies"
-                    className="absolute inset-0 appearance-none focus:outline-hidden"
-                  />
-                </div>
-              </div>
-              <label
-                htmlFor="agree-to-policies"
-                className="text-sm/6 text-gray-400"
-              >
-                By selecting this, you agree to our{" "}
-                <a
-                  href="#"
-                  className="font-semibold whitespace-nowrap text-indigo-400"
-                >
-                  privacy policy
-                </a>
-                .
-              </label>
-            </div>
-          </div>
-          <div className="mt-10">
-            <button
-              type="submit"
-              className="block w-full rounded-md bg-[var(--accent-color)] px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-            >
-              Let's talk
-            </button>
-          </div>
-        </form>
-      </div>
-    </>
-  );
-}
 
-/* tiny inline icons (no external deps) */
-function PhoneIcon() {
-  return (
-    <svg
-      className="h-5 w-5 text-gray-700 dark:text-slate-300"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M3 5a2 2 0 012-2h1.6a2 2 0 011.9 1.37l.7 2.09a2 2 0 01-.45 2.04l-1 1a15.9 15.9 0 006.36 6.36l1-1a2 2 0 012.04-.45l2.09.7A2 2 0 0121 18.4V20a2 2 0 01-2 2h-.5C9.6 22 2 14.4 2 5.5V5z"
-      />
-    </svg>
-  );
-}
-function MailIcon() {
-  return (
-    <svg
-      className="h-5 w-5 text-gray-700 dark:text-slate-300"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-      />
-    </svg>
-  );
-}
-function TicketIcon() {
-  return (
-    <svg
-      className="h-5 w-5 text-gray-700 dark:text-slate-300"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-    >
-      <path d="M4 6a2 2 0 012-2h12a2 2 0 012 2v3a2 2 0 01-2 2 2 2 0 000 4 2 2 0 012 2v3a2 2 0 01-2 2H6a2 2 0 01-2-2v-3a2 2 0 012-2 2 2 0 000-4 2 2 0 01-2-2V6z" />
-    </svg>
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  className="w-full flex items-center justify-center gap-2 rounded-lg bg-[var(--accent-color)] hover:bg-[#9790f9] px-4 py-3 text-xs font-semibold text-white shadow-md transition-colors cursor-pointer select-none"
+                >
+                  <FaPaperPlane className="w-3 h-3" />
+                  <span>Send Message</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
   );
 }

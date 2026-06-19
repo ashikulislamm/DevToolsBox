@@ -1,4 +1,11 @@
 import { useState, useEffect } from "react";
+import { Card, CardHeader } from "../../components/ui/Card.jsx";
+import { Button } from "../../components/ui/Button.jsx";
+import { Input } from "../../components/ui/Input.jsx";
+import { Textarea } from "../../components/ui/Textarea.jsx";
+import { useToast } from "../../context/ToastContext.jsx";
+import { useClipboard } from "../../hooks/useClipboard.js";
+import { FaFileCode, FaPlay, FaCopy, FaTrash, FaInfoCircle } from "react-icons/fa";
 
 export default function SnippetGenerator() {
   const [method, setMethod] = useState("GET");
@@ -7,41 +14,52 @@ export default function SnippetGenerator() {
   const [body, setBody] = useState("");
   const [language, setLanguage] = useState("fetch");
   const [snippet, setSnippet] = useState("");
-  const [notifications, setNotifications] = useState([]);
   const [showGuide, setShowGuide] = useState(false);
 
-  // Notification functions
-  const showNotification = (message, type = "success") => {
-    const id = Date.now();
-    const newNotification = { id, message, type };
-    setNotifications((prev) => [...prev, newNotification]);
+  const { showToast } = useToast();
+  const { copy } = useClipboard();
 
-    // Auto remove after 3 seconds
-    setTimeout(() => {
-      removeNotification(id);
-    }, 3000);
+  // Parse header input text block into key-value pairs
+  const parseHeaders = (text) => {
+    if (!text.trim()) return { "Content-Type": "application/json" };
+    const lines = text.split("\n").filter((line) => line.includes(":"));
+    const obj = {};
+    lines.forEach((line) => {
+      const [key, ...valueParts] = line.split(":");
+      const trimmedKey = key.trim();
+      const trimmedValue = valueParts.join(":").trim();
+      if (trimmedKey && trimmedValue) obj[trimmedKey] = trimmedValue;
+    });
+    return obj;
   };
 
-  const removeNotification = (id) => {
-    setNotifications((prev) =>
-      prev.filter((notification) => notification.id !== id)
-    );
-  };
-
-  // Generate code based on user input
+  // Generate code snippet based on parameters
   const generateSnippet = () => {
     if (!url.trim()) {
-      showNotification("Please enter a valid URL.", "error");
+      showToast("❌ Please enter a valid URL.", "error");
       return;
     }
 
-    const parsedHeaders = parseHeaders(headers);
+    let formattedUrl = url.trim();
+    if (!formattedUrl.startsWith("http://") && !formattedUrl.startsWith("https://")) {
+      formattedUrl = "https://" + formattedUrl;
+      setUrl(formattedUrl);
+    }
+
+    let parsedHeaders;
+    try {
+      parsedHeaders = parseHeaders(headers);
+    } catch (e) {
+      showToast("❌ Failed to parse headers. Ensure key: value format.", "error");
+      return;
+    }
+
     const formattedHeaders = JSON.stringify(parsedHeaders, null, 2);
     let code = "";
 
     switch (language) {
       case "fetch":
-        code = `fetch("${url}", {
+        code = `fetch("${formattedUrl}", {
   method: "${method}",
   headers: ${formattedHeaders},
   body: ${method === "GET" ? "undefined" : `JSON.stringify(${body || "{}"})`}
@@ -59,7 +77,7 @@ export default function SnippetGenerator() {
       case "axios":
         code = `import axios from "axios";
 
-axios.${method.toLowerCase()}("${url}"${
+axios.${method.toLowerCase()}("${formattedUrl}"${
           method === "GET" ? "" : `, ${body || "{}"}`
         }, {
   headers: ${formattedHeaders}
@@ -72,7 +90,7 @@ axios.${method.toLowerCase()}("${url}"${
         code = `import requests
 import json
 
-url = "${url}"
+url = "${formattedUrl}"
 headers = ${JSON.stringify(parsedHeaders, null, 2).replace(/"/g, "'")}
 ${
   method === "GET"
@@ -100,7 +118,7 @@ except requests.exceptions.RequestException as e:
 const http = require('http');
 const url = require('url');
 
-const requestUrl = "${url}";
+const requestUrl = "${formattedUrl}";
 const parsedUrl = url.parse(requestUrl);
 const isHttps = parsedUrl.protocol === 'https:';
 const client = isHttps ? https : http;
@@ -148,7 +166,7 @@ import (
 )
 
 func main() {
-    url := "${url}"
+    url := "${formattedUrl}"
     
     ${
       method !== "GET"
@@ -166,7 +184,7 @@ func main() {
     }
     
     ${Object.entries(parsedHeaders)
-      .map(([key, value]) => `req.Header.Set("${key}", "${value}")`)
+      .map(([key, val]) => `req.Header.Set("${key}", "${val}")`)
       .join("\n    ")}
     
     client := &http.Client{}
@@ -189,10 +207,10 @@ func main() {
 
       case "php":
         code = `<?php
-$url = "${url}";
+$url = "${formattedUrl}";
 $headers = array(
     ${Object.entries(parsedHeaders)
-      .map(([key, value]) => `'${key}: ${value}'`)
+      .map(([key, val]) => `'${key}: ${val}'`)
       .join(",\n    ")}
 );
 
@@ -235,20 +253,20 @@ public class ApiRequest {
             String requestBody = ${body || '"{}"'};
             
             HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("${url}"))
+                .uri(URI.create("${formattedUrl}"))
                 .timeout(Duration.ofSeconds(30))
                 .${method.toLowerCase()}(HttpRequest.BodyPublishers.ofString(requestBody))
                 ${Object.entries(parsedHeaders)
-                  .map(([key, value]) => `.header("${key}", "${value}")`)
+                  .map(([key, val]) => `.header("${key}", "${val}")`)
                   .join("\n                ")}
                 .build();`
                 : `
             HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("${url}"))
+                .uri(URI.create("${formattedUrl}"))
                 .timeout(Duration.ofSeconds(30))
                 .GET()
                 ${Object.entries(parsedHeaders)
-                  .map(([key, value]) => `.header("${key}", "${value}")`)
+                  .map(([key, val]) => `.header("${key}", "${val}")`)
                   .join("\n                ")}
                 .build();`
             }
@@ -266,18 +284,18 @@ public class ApiRequest {
         break;
 
       case "curl":
-        code = `curl -X ${method} "${url}" \\
+        code = `curl -X ${method} "${formattedUrl}" \\
   ${Object.entries(parsedHeaders)
-    .map(([key, value]) => `-H "${key}: ${value}"`)
+    .map(([key, val]) => `-H "${key}: ${val}"`)
     .join(" \\\n  ")}${method !== "GET" ? ` \\\n  -d '${body || "{}"}'` : ""} \\
   -w "\\nStatus Code: %{http_code}\\n"`;
         break;
 
       case "powershell":
-        code = `$uri = "${url}"
+        code = `$uri = "${formattedUrl}"
 $headers = @{
     ${Object.entries(parsedHeaders)
-      .map(([key, value]) => `"${key}" = "${value}"`)
+      .map(([key, val]) => `"${key}" = "${val}"`)
       .join("\n    ")}
 }
 
@@ -309,405 +327,180 @@ try {
     }
 
     setSnippet(code);
-    showNotification("✨ Code snippet generated successfully!", "success");
+    showToast("✨ Code snippet generated successfully!", "success");
   };
 
-  // Parse header input into JSON
-  const parseHeaders = (text) => {
-    if (!text.trim()) return { "Content-Type": "application/json" };
-    const lines = text.split("\n").filter((line) => line.includes(":"));
-    const obj = {};
-    lines.forEach((line) => {
-      const [key, value] = line.split(":").map((v) => v.trim());
-      if (key && value) obj[key] = value;
-    });
-    return obj;
-  };
-
-  // Copy snippet
-  const copySnippet = async () => {
+  const handleCopySnippet = () => {
     if (!snippet.trim()) {
-      showNotification(
-        "No code snippet to copy! Please generate one first.",
-        "error"
-      );
+      showToast("❌ No code snippet to copy! Please generate one first.", "error");
       return;
     }
-
-    try {
-      await navigator.clipboard.writeText(snippet);
-      showNotification(
-        "📋 Code snippet copied to clipboard successfully!",
-        "success"
-      );
-    } catch (err) {
-      showNotification("❌ Failed to copy code snippet to clipboard", "error");
-    }
+    copy(snippet, "Code Snippet");
   };
 
-  // Clear fields
   const clearAll = () => {
     setUrl("");
     setHeaders("");
     setBody("");
     setSnippet("");
+    showToast("Cleared snippet workspace", "success");
   };
 
   return (
-    <div
-      className="w-full max-w-6xl mx-auto mt-8 mb-8 p-6 rounded-2xl shadow-sm border"
-      style={{
-        backgroundColor: "var(--primary-color)",
-        color: "#fff",
-        borderColor: "var(--secondary-color)",
-        fontFamily: "var(--font-family)",
-      }}
-    >
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-        <h1 className="md:text-2xl font-bold text-white">
-          💻 Code Snippet Generator
-        </h1>
-        <div className="flex flex-wrap gap-2 mt-3 sm:mt-0">
-          <button
-            onClick={() => setShowGuide(!showGuide)}
-            className="px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-700"
-          >
-            {showGuide ? "Hide Guide" : "Show Guide"}
-          </button>
-          <button
-            onClick={generateSnippet}
-            className="px-3 py-1.5 rounded-lg text-sm font-medium"
-            style={{ backgroundColor: "var(--accent-color)" }}
-          >
-            Generate
-          </button>
-          <button
-            onClick={copySnippet}
-            className="px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-700 hover:bg-gray-800"
-          >
-            Copy
-          </button>
-          <button
-            onClick={clearAll}
-            className="px-3 py-1.5 rounded-lg text-sm font-medium bg-red-600 hover:bg-red-700"
-          >
-            Clear
-          </button>
-        </div>
-      </div>
+    <div className="w-full max-w-6xl mx-auto px-4 py-8">
+      <Card glow={true}>
+        {/* Header */}
+        <CardHeader
+          title="Code Snippet Generator"
+          icon={<FaFileCode />}
+          actions={
+            <>
+              <Button onClick={() => setShowGuide(!showGuide)} variant="secondary" size="sm">
+                {showGuide ? "Hide Guide" : "Show Guide"}
+              </Button>
+              <Button onClick={generateSnippet} variant="primary" size="sm" icon={<FaPlay />}>
+                Generate
+              </Button>
+              <Button onClick={handleCopySnippet} variant="secondary" size="sm" disabled={!snippet} icon={<FaCopy />}>
+                Copy
+              </Button>
+              <Button onClick={clearAll} variant="danger" size="sm" icon={<FaTrash />}>
+                Clear
+              </Button>
+            </>
+          }
+        />
 
-      {/* Input Section */}
-      <div className="space-y-4">
-        {/* Method + URL */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <select
-            value={method}
-            onChange={(e) => setMethod(e.target.value)}
-            className="px-3 py-2 rounded-md bg-gray-900 border border-gray-700 text-sm font-semibold"
-          >
-            <option>GET</option>
-            <option>POST</option>
-            <option>PUT</option>
-            <option>DELETE</option>
-            <option>PATCH</option>
-          </select>
-
-          <input
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="https://api.example.com/data"
-            className="flex-1 px-3 py-2 rounded-md bg-gray-900 border border-gray-700 text-sm outline-none"
-          />
-        </div>
-
-        {/* Headers */}
-        <div>
-          <h3 className="text-gray-300 mb-1 font-semibold">Headers:</h3>
-          <textarea
-            value={headers}
-            onChange={(e) => setHeaders(e.target.value)}
-            placeholder="Content-Type: application/json&#10;Authorization: Bearer your-token&#10;Accept: application/json"
-            className="w-full h-24 p-3 border rounded-lg font-mono text-sm bg-gray-900 text-gray-100 resize-none custom-scrollbar"
-            style={{ borderColor: "var(--secondary-color)" }}
-          />
-        </div>
-
-        {/* Body */}
-        {method !== "GET" && (
-          <div>
-            <h3 className="text-gray-300 mb-1 font-semibold">
-              Request Body (JSON):
+        {/* Guide */}
+        {showGuide && (
+          <div className="mb-6 p-5 bg-slate-900 border border-slate-800 rounded-xl space-y-3 text-xs leading-relaxed text-slate-300">
+            <h3 className="font-semibold text-sm text-[var(--accent-color)] flex items-center gap-2">
+              📚 HTTP Request Snippet Guide
             </h3>
-            <textarea
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              placeholder='{"name": "John Doe", "email": "john@example.com", "age": 30}'
-              className="w-full h-24 p-3 border rounded-lg font-mono text-sm bg-gray-900 text-gray-100 resize-none custom-scrollbar"
-              style={{ borderColor: "var(--secondary-color)" }}
-            />
+            <p>
+              • <strong>Method & URL:</strong> Specify the target API endpoints and HTTP method. Secure protocols (<code>https://</code>) will automatically prepend if missing.
+            </p>
+            <p>
+              • <strong>Request Headers:</strong> Write custom headers in <code>Key: Value</code> format, one header per line. e.g. <code>Authorization: Bearer my_token</code>.
+            </p>
+            <p>
+              • <strong>Payload JSON:</strong> Provide a valid raw JSON object inside the payload block for non-GET requests.
+            </p>
           </div>
         )}
 
-        {/* Language Select */}
-        <div>
-          <h3 className="text-gray-300 mb-1 font-semibold">Language:</h3>
-          <select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            className="px-3 py-2 rounded-md bg-gray-900 border border-gray-700 text-sm font-semibold"
-          >
-            <optgroup label="JavaScript">
-              <option value="fetch">JavaScript (Fetch API)</option>
-              <option value="axios">JavaScript (Axios)</option>
-              <option value="nodejs">Node.js (Native HTTP)</option>
-            </optgroup>
-            <optgroup label="Python">
-              <option value="python">Python (Requests)</option>
-            </optgroup>
-            <optgroup label="Other Languages">
-              <option value="go">Go (net/http)</option>
-              <option value="java">Java (HTTP Client)</option>
-              <option value="php">PHP (file_get_contents)</option>
-            </optgroup>
-            <optgroup label="Command Line">
-              <option value="curl">cURL</option>
-              <option value="powershell">PowerShell</option>
-            </optgroup>
-          </select>
-        </div>
-      </div>
+        {/* Workspace Grid */}
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* Inputs Panel */}
+          <div className="space-y-4">
+            {/* Method & URL Input row */}
+            <div className="flex gap-3 items-end">
+              <div className="flex flex-col gap-1.5 shrink-0">
+                <label htmlFor="method-select" className="block text-[11px] font-semibold text-slate-400 font-brand">
+                  HTTP Method
+                </label>
+                <select
+                  id="method-select"
+                  value={method}
+                  onChange={(e) => setMethod(e.target.value)}
+                  className="bg-slate-950 border border-slate-800 hover:border-slate-700/80 text-xs text-white rounded-lg px-3.5 py-2.5 outline-none transition-all focus:border-[var(--accent-color)] focus:ring-2 focus:ring-[var(--accent-color)]/25 cursor-pointer font-bold h-[38px] w-[90px]"
+                >
+                  <option>GET</option>
+                  <option>POST</option>
+                  <option>PUT</option>
+                  <option>DELETE</option>
+                  <option>PATCH</option>
+                </select>
+              </div>
 
-      {/* Usage Guide */}
-      {showGuide && (
-        <div className="mt-6 p-4 bg-gray-800 rounded-lg border border-gray-600">
-          <h3 className="font-semibold mb-3 text-blue-300 flex items-center">
-            📚 How to Use Code Snippet Generator
-          </h3>
-          <div className="space-y-4 text-sm text-gray-300">
-            <div>
-              <h4 className="font-medium text-white mb-1">
-                1. Set HTTP Method & URL
-              </h4>
-              <p>• Choose your HTTP method (GET, POST, PUT, DELETE, PATCH)</p>
-              <p>• Enter the complete API endpoint URL</p>
+              <div className="flex-1">
+                <Input
+                  label="API Endpoint URL"
+                  id="snippet-url"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="api.example.com/v1/users"
+                  onKeyPress={(e) => e.key === "Enter" && generateSnippet()}
+                />
+              </div>
             </div>
-            <div>
-              <h4 className="font-medium text-white mb-1">
-                2. Add Headers (Optional)
-              </h4>
-              <p>
-                • Format:{" "}
-                <code className="bg-gray-700 px-1 rounded">
-                  Header-Name: Header-Value
-                </code>
-              </p>
-              <p>
-                • Example:{" "}
-                <code className="bg-gray-700 px-1 rounded">
-                  Authorization: Bearer your-token
-                </code>
-              </p>
-              <p>• One header per line</p>
+
+            {/* Target Language Select */}
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="language-select" className="block text-[11px] font-semibold text-slate-400 font-brand">
+                Target Language
+              </label>
+              <select
+                id="language-select"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-800 hover:border-slate-700/80 text-xs text-white rounded-lg px-3.5 py-2.5 outline-none transition-all focus:border-[var(--accent-color)] focus:ring-2 focus:ring-[var(--accent-color)]/25 cursor-pointer"
+              >
+                <optgroup label="JavaScript" className="bg-[#0F172A]">
+                  <option value="fetch">JavaScript (Fetch API)</option>
+                  <option value="axios">JavaScript (Axios)</option>
+                  <option value="nodejs">Node.js (Native HTTP)</option>
+                </optgroup>
+                <optgroup label="Python" className="bg-[#0F172A]">
+                  <option value="python">Python (Requests)</option>
+                </optgroup>
+                <optgroup label="Other Languages" className="bg-[#0F172A]">
+                  <option value="go">Go (net/http)</option>
+                  <option value="java">Java (HTTP Client)</option>
+                  <option value="php">PHP (file_get_contents)</option>
+                </optgroup>
+                <optgroup label="Command Line" className="bg-[#0F172A]">
+                  <option value="curl">cURL</option>
+                  <option value="powershell">PowerShell</option>
+                </optgroup>
+              </select>
             </div>
-            <div>
-              <h4 className="font-medium text-white mb-1">
-                3. Request Body (For POST/PUT/PATCH)
-              </h4>
-              <p>• Enter valid JSON data</p>
-              <p>
-                • Example:{" "}
-                <code className="bg-gray-700 px-1 rounded">
-                  {"{"}"name": "John", "email": "john@example.com"{"}"}
-                </code>
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-white mb-1">
-                4. Choose Language
-              </h4>
-              <p>
-                • <strong>JavaScript (Fetch/Axios/Node.js):</strong> Web
-                development
-              </p>
-              <p>
-                • <strong>Python:</strong> Data science, automation, backend
-              </p>
-              <p>
-                • <strong>Go:</strong> High-performance backend services
-              </p>
-              <p>
-                • <strong>Java:</strong> Enterprise applications
-              </p>
-              <p>
-                • <strong>PHP:</strong> Web development, WordPress
-              </p>
-              <p>
-                • <strong>cURL:</strong> Command line testing
-              </p>
-              <p>
-                • <strong>PowerShell:</strong> Windows automation
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-white mb-1">
-                5. Generate & Copy
-              </h4>
-              <p>• Click "Generate" to create your code snippet</p>
-              <p>• Click "Copy" to copy the generated code to clipboard</p>
-              <p>• Paste into your project and modify as needed</p>
-            </div>
-            <div className="p-3 bg-blue-900/30 border border-blue-700 rounded">
-              <h4 className="font-medium text-blue-300 mb-1">💡 Pro Tips:</h4>
-              <p>• Always test your API endpoints before generating code</p>
-              <p>• Add error handling for production applications</p>
-              <p>• Consider rate limiting and authentication requirements</p>
-              <p>
-                • Use environment variables for sensitive data like API keys
-              </p>
-            </div>
+
+            {/* Headers Area */}
+            <Textarea
+              label="Request Headers (Key: Value - One per line)"
+              id="snippet-headers"
+              value={headers}
+              onChange={(e) => setHeaders(e.target.value)}
+              placeholder="Authorization: Bearer token&#10;Accept: application/json"
+              rows={4}
+            />
+
+            {/* Body Area (For non-GET) */}
+            {method !== "GET" && (
+              <Textarea
+                label="Request Body (JSON Payload)"
+                id="snippet-body"
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                placeholder='{"name": "John Doe", "email": "john@example.com"}'
+                rows={5}
+              />
+            )}
+          </div>
+
+          {/* Snippet Output Panel */}
+          <div className="flex flex-col gap-1.5 h-full">
+            <label className="block text-[11px] font-semibold text-slate-400 font-brand select-none">
+              Generated Code Snippet
+            </label>
+            <pre className="w-full flex-1 bg-slate-950 border border-slate-800 rounded-lg p-4 text-emerald-400 text-xs font-mono overflow-auto custom-scrollbar min-h-[350px] select-text">
+              <code>{snippet || "// Click Generate to generate snippet code"}</code>
+            </pre>
           </div>
         </div>
-      )}
 
-      {/* Output Section */}
-      <div className="mt-6">
-        <h3 className="font-semibold mb-2 text-gray-200">Generated Snippet:</h3>
-        <textarea
-          readOnly
-          value={snippet}
-          className="w-full h-80 p-3 border rounded-lg font-mono text-sm bg-gray-900 text-gray-100 resize-none custom-scrollbar"
-          style={{ borderColor: "var(--secondary-color)" }}
-          placeholder="Generated code snippet will appear here..."
-        />
-      </div>
-
-      {/* Toast Notification Component */}
-      {(() => {
-        const ToastNotification = ({ notification, onRemove }) => {
-          const { id, message, type } = notification;
-          const [isVisible, setIsVisible] = useState(false);
-
-          useEffect(() => {
-            setTimeout(() => setIsVisible(true), 10);
-          }, []);
-
-          const getIcon = () => {
-            switch (type) {
-              case "success":
-                return (
-                  <svg
-                    className="w-5 h-5 text-green-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                );
-              case "error":
-                return (
-                  <svg
-                    className="w-5 h-5 text-red-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                );
-              default:
-                return (
-                  <svg
-                    className="w-5 h-5 text-blue-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                );
-            }
-          };
-
-          const getBgColor = () => {
-            switch (type) {
-              case "success":
-                return "bg-green-50 border-green-200";
-              case "error":
-                return "bg-red-50 border-red-200";
-              default:
-                return "bg-blue-50 border-blue-200";
-            }
-          };
-
-          const getTextColor = () => {
-            switch (type) {
-              case "success":
-                return "text-green-800";
-              case "error":
-                return "text-red-800";
-              default:
-                return "text-blue-800";
-            }
-          };
-
-          return (
-            <div
-              className={`flex items-start p-4 mb-3 rounded-lg border ${getBgColor()} ${getTextColor()} transform transition-all duration-300 ease-in-out shadow-lg`}
-              style={{
-                transform: isVisible ? "translateX(0)" : "translateX(100%)",
-                opacity: isVisible ? 1 : 0,
-              }}
-            >
-              <div className="flex-shrink-0 mt-0.5">{getIcon()}</div>
-              <div className="ml-3 text-sm font-medium flex-1 min-w-0">
-                {message}
-              </div>
-              <button
-                onClick={() => onRemove(id)}
-                className={`ml-3 flex-shrink-0 rounded-lg p-1 inline-flex items-center justify-center h-6 w-6 ${getTextColor()} hover:bg-white hover:bg-opacity-30 focus:ring-2 focus:ring-gray-300 focus:outline-none transition-colors`}
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-            </div>
-          );
-        };
-
-        return (
-          notifications.length > 0 && (
-            <div className="fixed top-4 right-4 z-50 space-y-2 max-w-sm w-full">
-              {notifications.map((notification) => (
-                <ToastNotification
-                  key={notification.id}
-                  notification={notification}
-                  onRemove={removeNotification}
-                />
-              ))}
-            </div>
-          )
-        );
-      })()}
+        {/* Info Box Footer */}
+        <div className="mt-6 p-4 bg-slate-900/20 border border-slate-800/40 rounded-xl flex gap-3 text-slate-400">
+          <FaInfoCircle className="text-base text-[var(--accent-color)] shrink-0 mt-0.5" />
+          <div>
+            <h4 className="text-xs font-semibold text-slate-300 select-none">HTTP Client Notes:</h4>
+            <p className="text-[10px] leading-relaxed mt-0.5">
+              Code snippets generated here employ standard, modern APIs and libraries. Standard headers such as <code>Content-Type: application/json</code> are supplied by default if no headers are explicitly provided.
+            </p>
+          </div>
+        </div>
+      </Card>
     </div>
   );
 }

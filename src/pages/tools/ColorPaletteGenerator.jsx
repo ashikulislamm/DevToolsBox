@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
-import {
-  FaCopy,
-  FaRandom,
-  FaDownload,
-  FaPlus,
-  FaMinus,
-  FaLock,
-  FaUnlock,
-  FaEyeDropper,
+import { Card, CardHeader } from "../../components/ui/Card.jsx";
+import { Button } from "../../components/ui/Button.jsx";
+import { Textarea } from "../../components/ui/Textarea.jsx";
+import { Select } from "../../components/ui/Select.jsx";
+import { Input } from "../../components/ui/Input.jsx";
+import { useToast } from "../../context/ToastContext.jsx";
+import { useClipboard } from "../../hooks/useClipboard.js";
+import { exportToFile } from "../../utils/fileExport.js";
+import { 
+  FaPalette, FaCopy, FaRandom, FaDownload, FaPlus, FaMinus, FaLock, FaUnlock, FaBook 
 } from "react-icons/fa";
 
-const ColorPaletteGenerator = () => {
+export default function ColorPaletteGenerator() {
   const [colors, setColors] = useState([
     { hex: "#3B82F6", locked: false },
     { hex: "#8B5CF6", locked: false },
@@ -20,21 +21,29 @@ const ColorPaletteGenerator = () => {
   ]);
   const [harmony, setHarmony] = useState("complementary");
   const [baseColor, setBaseColor] = useState("#3B82F6");
-  const [notifications, setNotifications] = useState([]);
   const [showGuide, setShowGuide] = useState(false);
   const [exportFormat, setExportFormat] = useState("hex");
 
-  // Color harmony algorithms
-  const colorHarmonies = {
-    monochromatic: "Monochromatic",
-    analogous: "Analogous",
-    complementary: "Complementary",
-    triadic: "Triadic",
-    tetradic: "Tetradic",
-    splitComplementary: "Split Complementary",
-  };
+  const { showToast } = useToast();
+  const { copy } = useClipboard();
 
-  const exportFormats = ["hex", "rgb", "hsl", "css-variables"];
+  // Color harmony algorithms
+  const colorHarmonies = [
+    { value: "monochromatic", label: "Monochromatic" },
+    { value: "analogous", label: "Analogous" },
+    { value: "complementary", label: "Complementary" },
+    { value: "triadic", label: "Triadic" },
+    { value: "tetradic", label: "Tetradic" },
+    { value: "splitComplementary", label: "Split Complementary" },
+    { value: "random", label: "Random (No Harmony)" },
+  ];
+
+  const exportFormats = [
+    { value: "hex", label: "HEX (#3B82F6)" },
+    { value: "rgb", label: "RGB (59, 130, 246)" },
+    { value: "hsl", label: "HSL (217, 91%, 60%)" },
+    { value: "css-variables", label: "CSS Variables (--color-1)" },
+  ];
 
   // Predefined color palettes
   const presetPalettes = [
@@ -72,23 +81,6 @@ const ColorPaletteGenerator = () => {
     },
   ];
 
-  // Notification functions
-  const showNotification = (message, type = "success") => {
-    const id = Date.now();
-    const newNotification = { id, message, type };
-    setNotifications((prev) => [...prev, newNotification]);
-
-    setTimeout(() => {
-      removeNotification(id);
-    }, 3000);
-  };
-
-  const removeNotification = (id) => {
-    setNotifications((prev) =>
-      prev.filter((notification) => notification.id !== id)
-    );
-  };
-
   // Convert hex to RGB
   const hexToRgb = (hex) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -108,9 +100,7 @@ const ColorPaletteGenerator = () => {
     b /= 255;
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
-    let h,
-      s,
-      l = (max + min) / 2;
+    let h, s, l = (max + min) / 2;
 
     if (max === min) {
       h = s = 0;
@@ -241,7 +231,6 @@ const ColorPaletteGenerator = () => {
       );
       setColors(newColors);
     } else {
-      // Generate a random base color each time for more variety
       const randomBaseColor = generateRandomColor();
       const harmonies = generateHarmony(randomBaseColor, harmony);
       const newColors = colors.map((color, index) =>
@@ -250,10 +239,9 @@ const ColorPaletteGenerator = () => {
           : { ...color, hex: harmonies[index] || generateRandomColor() }
       );
       setColors(newColors);
-      // Update the base color input to show what was used
       setBaseColor(randomBaseColor);
     }
-    showNotification("New palette generated! 🎨", "success");
+    showToast("New palette generated! 🎨", "success");
   };
 
   // Apply preset palette
@@ -263,13 +251,12 @@ const ColorPaletteGenerator = () => {
       locked: colors[index]?.locked || false,
     }));
 
-    // Fill remaining slots if needed
     while (newColors.length < colors.length) {
       newColors.push({ hex: generateRandomColor(), locked: false });
     }
 
     setColors(newColors.slice(0, colors.length));
-    showNotification(`Applied ${preset.name} palette! 🎨`, "success");
+    showToast(`Applied ${preset.name} palette! 🎨`, "success");
   };
 
   // Update color
@@ -279,28 +266,34 @@ const ColorPaletteGenerator = () => {
     setColors(newColors);
   };
 
-  // Toggle lock
+  // Toggle lock state
   const toggleLock = (index) => {
     const newColors = [...colors];
     newColors[index].locked = !newColors[index].locked;
     setColors(newColors);
   };
 
-  // Add color
+  // Add color block
   const addColor = () => {
     if (colors.length < 10) {
       setColors([...colors, { hex: generateRandomColor(), locked: false }]);
+      showToast("Added new color block", "success");
+    } else {
+      showToast("❌ Max limit of 10 colors reached", "error");
     }
   };
 
-  // Remove color
+  // Remove color block
   const removeColor = (index) => {
     if (colors.length > 2) {
       setColors(colors.filter((_, i) => i !== index));
+      showToast("Removed color block", "success");
+    } else {
+      showToast("❌ You need at least 2 colors!", "error");
     }
   };
 
-  // Export functions
+  // Format color outputs
   const formatColor = (hex, format) => {
     const { r, g, b } = hexToRgb(hex);
     const { h, s, l } = rgbToHsl(r, g, b);
@@ -317,21 +310,18 @@ const ColorPaletteGenerator = () => {
     }
   };
 
-  const copyPalette = async () => {
-    const paletteString = colors
+  const getExportPreviewText = () => {
+    return colors
       .map((color) => formatColor(color.hex, exportFormat))
       .join("\n");
-    try {
-      await navigator.clipboard.writeText(paletteString);
-      showNotification(
-        `Palette copied as ${exportFormat.toUpperCase()}! 📋`,
-        "success"
-      );
-    } catch (err) {
-      showNotification("Failed to copy palette", "error");
-    }
   };
 
+  // Copy Palette
+  const copyPalette = () => {
+    copy(getExportPreviewText(), `Palette (${exportFormat.toUpperCase()})`);
+  };
+
+  // Download Palette JSON config
   const downloadPalette = () => {
     const paletteData = {
       colors: colors.map((c) => c.hex),
@@ -341,299 +331,146 @@ const ColorPaletteGenerator = () => {
       generated: new Date().toISOString(),
     };
 
-    const blob = new Blob([JSON.stringify(paletteData, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `color-palette-${Date.now()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    showNotification("Palette downloaded! 💾", "success");
-  };
-
-  // Toast Notification Component
-  const ToastNotification = ({ notification, onRemove }) => {
-    const { id, message, type } = notification;
-    const [isVisible, setIsVisible] = useState(false);
-
-    useEffect(() => {
-      setTimeout(() => setIsVisible(true), 10);
-    }, []);
-
-    const getIcon = () => {
-      switch (type) {
-        case "success":
-          return (
-            <svg
-              className="w-5 h-5 text-green-400"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clipRule="evenodd"
-              />
-            </svg>
-          );
-        case "error":
-          return (
-            <svg
-              className="w-5 h-5 text-red-400"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                clipRule="evenodd"
-              />
-            </svg>
-          );
-        default:
-          return (
-            <svg
-              className="w-5 h-5 text-blue-400"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                clipRule="evenodd"
-              />
-            </svg>
-          );
-      }
-    };
-
-    const getBgColor = () => {
-      switch (type) {
-        case "success":
-          return "bg-green-50 border-green-200";
-        case "error":
-          return "bg-red-50 border-red-200";
-        default:
-          return "bg-blue-50 border-blue-200";
-      }
-    };
-
-    const getTextColor = () => {
-      switch (type) {
-        case "success":
-          return "text-green-800";
-        case "error":
-          return "text-red-800";
-        default:
-          return "text-blue-800";
-      }
-    };
-
-    return (
-      <div
-        className={`flex items-start p-4 mb-3 rounded-lg border ${getBgColor()} ${getTextColor()} transform transition-all duration-300 ease-in-out shadow-lg`}
-        style={{
-          transform: isVisible ? "translateX(0)" : "translateX(100%)",
-          opacity: isVisible ? 1 : 0,
-        }}
-      >
-        <div className="flex-shrink-0 mt-0.5">{getIcon()}</div>
-        <div className="ml-3 text-sm font-medium flex-1 min-w-0">{message}</div>
-        <button
-          onClick={() => onRemove(id)}
-          className={`ml-3 flex-shrink-0 rounded-lg p-1 inline-flex items-center justify-center h-6 w-6 ${getTextColor()} hover:bg-white hover:bg-opacity-30 focus:ring-2 focus:ring-gray-300 focus:outline-none transition-colors`}
-        >
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path
-              fillRule="evenodd"
-              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </button>
-      </div>
+    const exported = exportToFile(
+      JSON.stringify(paletteData, null, 2),
+      `color-palette-${Date.now()}.json`,
+      "application/json"
     );
+
+    if (exported) {
+      showToast("Palette JSON configuration downloaded! 💾", "success");
+    } else {
+      showToast("❌ Download failed", "error");
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white mt-8 mb-8 rounded-lg px-4 shadow-lg">
-      {/* Toast Notifications Container */}
-      {notifications.length > 0 && (
-        <div className="fixed top-4 right-4 z-50 space-y-2 max-w-sm">
-          {notifications.map((notification) => (
-            <ToastNotification
-              key={notification.id}
-              notification={notification}
-              onRemove={removeNotification}
-            />
-          ))}
-        </div>
-      )}
+    <div className="w-full max-w-6xl mx-auto px-4 py-8">
+      <Card glow={true}>
+        {/* Header Actions */}
+        <CardHeader
+          title="Color Palette Generator"
+          icon={<FaPalette />}
+          actions={
+            <>
+              <Button onClick={() => setShowGuide(!showGuide)} variant="outline" size="sm" icon={<FaBook />}>
+                {showGuide ? "Hide Guide" : "Show Guide"}
+              </Button>
+              <Button onClick={copyPalette} variant="primary" size="sm" icon={<FaCopy />}>
+                Copy Palette
+              </Button>
+              <Button onClick={downloadPalette} variant="secondary" size="sm" icon={<FaDownload />}>
+                Download JSON
+              </Button>
+            </>
+          }
+        />
 
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-          <h1 className="md:text-2xl font-bold text-white">
-            🎨 Color Palette Generator
-          </h1>
-          <div className="flex flex-wrap gap-2 mt-3 sm:mt-0">
-            <button
-              onClick={() => setShowGuide(!showGuide)}
-              className="px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-700"
-            >
-              {showGuide ? "Hide Guide" : "Show Guide"}
-            </button>
-            <button
-              onClick={copyPalette}
-              className="px-3 py-1.5 rounded-lg text-sm font-medium"
-              style={{ backgroundColor: "var(--accent-color)" }}
-            >
-              Copy Palette
-            </button>
-            <button
-              onClick={downloadPalette}
-              className="px-3 py-1.5 rounded-lg text-sm font-medium bg-green-600 hover:bg-green-700"
-            >
-              Download
-            </button>
-          </div>
-        </div>
-
-        {/* Usage Guide */}
+        {/* Collapsible Usage Guide */}
         {showGuide && (
-          <div className="mt-6 p-4 bg-gray-800 rounded-lg border border-gray-600">
-            <h3 className="font-semibold mb-3 text-blue-300 flex items-center">
-              📚 How to Use Color Palette Generator
+          <div className="mb-6 p-5 bg-slate-900 border border-slate-800 rounded-xl space-y-4 text-xs select-text leading-relaxed">
+            <h3 className="font-bold text-slate-200 text-sm flex items-center gap-2 font-brand select-none">
+              📚 Color Palette Guide
             </h3>
-            <div className="space-y-4 text-sm text-gray-300">
-              <div>
-                <h4 className="font-medium text-white mb-1">
-                  1. Choose Color Harmony
-                </h4>
-                <p>
-                  • <strong>Monochromatic</strong>: Different shades of the same
-                  color
-                </p>
-                <p>
-                  • <strong>Analogous</strong>: Colors next to each other on
-                  color wheel
-                </p>
-                <p>
-                  • <strong>Complementary</strong>: Opposite colors for high
-                  contrast
-                </p>
-                <p>
-                  • <strong>Triadic</strong>: Three evenly spaced colors
-                </p>
-                <p>
-                  • <strong>Tetradic</strong>: Four colors forming a rectangle
-                </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <p>• <strong>Harmonies:</strong> Choose from complementary contrast, analogous blends, monochromatic gradients, or triadic layout models.</p>
+                <p>• <strong>Locks:</strong> Press the padlock button on any color card to prevent it from changing when generating new palettes.</p>
               </div>
-              <div>
-                <h4 className="font-medium text-white mb-1">
-                  2. Customize Your Palette
-                </h4>
-                <p>• Click on any color to edit it manually</p>
-                <p>
-                  • Lock colors you want to keep when generating new palettes
-                </p>
-                <p>• Add or remove colors (2-10 colors supported)</p>
-                <p>• Use presets for quick inspiration</p>
-              </div>
-              <div>
-                <h4 className="font-medium text-white mb-1">
-                  3. Export Your Palette
-                </h4>
-                <p>• Copy in different formats: HEX, RGB, HSL, CSS Variables</p>
-                <p>• Download as JSON file for later use</p>
-                <p>• Use in your design projects and websites</p>
-              </div>
-              <div className="p-3 bg-blue-900/30 border border-blue-700 rounded">
-                <h4 className="font-medium text-blue-300 mb-1">💡 Pro Tips:</h4>
-                <p>
-                  • Lock your brand colors and generate harmonies around them
-                </p>
-                <p>
-                  • Use complementary colors for buttons and call-to-actions
-                </p>
-                <p>
-                  • Monochromatic palettes work great for minimalist designs
-                </p>
-                <p>
-                  • Test your palette with different contrast ratios for
-                  accessibility
-                </p>
+              <div className="space-y-2">
+                <p>• <strong>Color picker:</strong> Click directly on the color rectangles to toggle the browser's native picker for custom edits.</p>
+                <p>• <strong>Exporters:</strong> Export the palette as HEX values, CSS variables, RGB codes, or HSL formatting.</p>
               </div>
             </div>
           </div>
         )}
 
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-          {/* Controls Panel */}
-          <div className="xl:col-span-2 space-y-6">
-            {/* Color Palette Display */}
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <div className="flex items-center justify-between mb-4 md:flex-row flex-col gap-3">
-                <h3 className="text-xl font-bold text-purple-400">
-                  Color Palette
+        {/* Presets List */}
+        <div className="bg-slate-950/40 border border-slate-800/80 rounded-xl p-5 mb-6">
+          <label className="block text-[11px] font-semibold text-slate-400 font-brand mb-3 select-none">
+            Preset Palettes:
+          </label>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {presetPalettes.map((preset, index) => (
+              <div
+                key={index}
+                className="group cursor-pointer bg-slate-900 border border-slate-850 p-2.5 rounded-xl hover:border-slate-700/80 transition-colors"
+                onClick={() => applyPreset(preset)}
+              >
+                <div className="text-[10px] font-bold text-slate-400 group-hover:text-white transition-colors mb-2 truncate">
+                  {preset.name}
+                </div>
+                <div className="flex rounded overflow-hidden h-5 select-none">
+                  {preset.colors.map((color, colorIndex) => (
+                    <div
+                      key={colorIndex}
+                      className="flex-1 h-full"
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Workspace Columns */}
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+          {/* Main Palette Blocks Panel (Span 8) */}
+          <div className="xl:col-span-8 space-y-6">
+            <div className="bg-slate-950/40 border border-slate-800/80 rounded-xl p-5 space-y-4">
+              <div className="flex justify-between items-center select-none">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Active Palette Swatches
                 </h3>
                 <div className="flex gap-2">
-                  <button
-                    onClick={addColor}
-                    disabled={colors.length >= 10}
-                    className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-3 py-2 rounded-lg transition-colors text-sm flex items-center gap-2"
-                  >
-                    <FaPlus />
-                    Add
-                  </button>
-                  <button
-                    onClick={generateNewPalette}
-                    className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg transition-colors text-sm flex items-center gap-2"
-                  >
-                    <FaRandom />
+                  <Button onClick={addColor} variant="outline" size="sm" icon={<FaPlus />} disabled={colors.length >= 10}>
+                    Add Block
+                  </Button>
+                  <Button onClick={generateNewPalette} variant="primary" size="sm" icon={<FaRandom />}>
                     Generate
-                  </button>
+                  </Button>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                 {colors.map((color, index) => (
-                  <div key={index} className="relative group">
+                  <div key={index} className="bg-slate-900 border border-slate-850 p-3 rounded-xl flex flex-col items-center">
                     <div
-                      className="w-full h-24 rounded-lg shadow-lg cursor-pointer transition-transform hover:scale-105 border-2 border-gray-600"
+                      className="w-full h-24 rounded-lg shadow-inner cursor-pointer hover:scale-102 active:scale-98 transition-all border border-slate-850"
                       style={{ backgroundColor: color.hex }}
                       onClick={() => {
                         const input = document.createElement("input");
                         input.type = "color";
                         input.value = color.hex;
-                        input.onchange = (e) =>
-                          updateColor(index, e.target.value);
+                        input.onchange = (e) => updateColor(index, e.target.value);
                         input.click();
                       }}
+                      title="Click to pick custom color"
                     />
-                    <div className="mt-2 text-center">
-                      <div className="text-xs font-mono text-gray-300">
+                    <div className="mt-3 text-center w-full">
+                      <div className="text-[10px] font-bold font-mono text-slate-300 tracking-wider">
                         {color.hex.toUpperCase()}
                       </div>
-                      <div className="flex justify-center items-center gap-2 mt-1">
+                      <div className="flex justify-center items-center gap-1.5 mt-2">
                         <button
                           onClick={() => toggleLock(index)}
-                          className={`text-xs px-2 py-1 rounded transition-colors ${
+                          className={`p-1.5 rounded-lg border transition-colors cursor-pointer text-[10px] ${
                             color.locked
-                              ? "bg-yellow-600 text-white"
-                              : "bg-gray-600 text-gray-300 hover:bg-gray-500"
+                              ? "bg-yellow-900/20 border-yellow-800/60 text-yellow-400"
+                              : "bg-slate-950 border-slate-850 text-slate-400 hover:text-white"
                           }`}
+                          title={color.locked ? "Color locked" : "Lock color"}
                         >
-                          {color.locked ? <FaLock /> : <FaUnlock />}
+                          {color.locked ? <FaLock className="w-2.5 h-2.5" /> : <FaUnlock className="w-2.5 h-2.5" />}
                         </button>
                         {colors.length > 2 && (
                           <button
                             onClick={() => removeColor(index)}
-                            className="text-xs px-2 py-1 rounded bg-red-600 hover:bg-red-700 text-white transition-colors"
+                            className="p-1.5 bg-slate-950 hover:bg-rose-950/20 text-slate-400 hover:text-rose-400 rounded-lg border border-slate-850 hover:border-rose-900/60 transition-colors cursor-pointer"
+                            title="Remove color block"
                           >
-                            <FaMinus />
+                            <FaMinus className="w-2.5 h-2.5" />
                           </button>
                         )}
                       </div>
@@ -643,134 +480,68 @@ const ColorPaletteGenerator = () => {
               </div>
             </div>
 
-            {/* Generation Settings */}
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <h3 className="text-xl font-bold mb-4 text-blue-400">
-                Generation Settings
+            {/* Harmony and Settings */}
+            <div className="bg-slate-950/40 border border-slate-800/80 rounded-xl p-5 space-y-4">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 select-none">
+                Generator parameters
               </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Color Harmony
-                  </label>
-                  <select
-                    value={harmony}
-                    onChange={(e) => setHarmony(e.target.value)}
-                    className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:border-blue-500 focus:outline-none"
-                  >
-                    {Object.entries(colorHarmonies).map(([key, name]) => (
-                      <option key={key} value={key}>
-                        {name}
-                      </option>
-                    ))}
-                    <option value="random">Random</option>
-                  </select>
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <Select
+                  label="Color Harmony:"
+                  id="color-harmony"
+                  value={harmony}
+                  onChange={(e) => setHarmony(e.target.value)}
+                  options={colorHarmonies}
+                />
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Base Color
+                  <label className="block text-[11px] font-semibold text-slate-400 font-brand mb-1.5 select-none">
+                    Base Color picker:
                   </label>
                   <div className="flex gap-2">
                     <input
                       type="color"
                       value={baseColor}
                       onChange={(e) => setBaseColor(e.target.value)}
-                      className="w-12 h-10 rounded border border-gray-600 bg-gray-700"
+                      className="w-10 h-8 rounded border border-slate-850 cursor-pointer bg-transparent"
                     />
-                    <input
-                      type="text"
-                      value={baseColor}
-                      onChange={(e) => setBaseColor(e.target.value)}
-                      className="flex-1 bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:border-blue-500 focus:outline-none font-mono text-sm"
-                      placeholder="#3B82F6"
-                    />
+                    <div className="flex-1">
+                      <Input
+                        id="base-hex"
+                        value={baseColor}
+                        onChange={(e) => setBaseColor(e.target.value)}
+                        placeholder="#3B82F6"
+                        className="!px-2.5 !py-1.5"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Export Format
-                  </label>
-                  <select
-                    value={exportFormat}
-                    onChange={(e) => setExportFormat(e.target.value)}
-                    className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:border-blue-500 focus:outline-none"
-                  >
-                    <option value="hex">HEX (#3B82F6)</option>
-                    <option value="rgb">RGB (59, 130, 246)</option>
-                    <option value="hsl">HSL (217, 91%, 60%)</option>
-                    <option value="css-variables">
-                      CSS Variables (--color-1)
-                    </option>
-                  </select>
-                </div>
+                <Select
+                  label="Output Format:"
+                  id="export-format"
+                  value={exportFormat}
+                  onChange={(e) => setExportFormat(e.target.value)}
+                  options={exportFormats}
+                />
               </div>
             </div>
           </div>
 
-          {/* Presets Panel */}
-          <div className="space-y-6">
-            {/* Color Presets */}
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <h3 className="text-xl font-bold mb-4 text-orange-400">
-                Preset Palettes
-              </h3>
-              <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
-                {presetPalettes.map((preset, index) => (
-                  <div
-                    key={index}
-                    className="group cursor-pointer"
-                    onClick={() => applyPreset(preset)}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">
-                        {preset.name}
-                      </span>
-                    </div>
-                    <div className="flex gap-1 rounded overflow-hidden">
-                      {preset.colors.map((color, colorIndex) => (
-                        <div
-                          key={colorIndex}
-                          className="flex-1 h-8 transition-transform group-hover:scale-105"
-                          style={{ backgroundColor: color }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Export Preview */}
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <div className="flex items-center justify-between mb-4 md:flex-row flex-col gap-3">
-                <h3 className="text-xl font-bold text-green-400">
-                  Export Preview
-                </h3>
-                <button
-                  onClick={copyPalette}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors text-sm flex items-center gap-2"
-                >
-                  <FaCopy />
-                  Copy
-                </button>
-              </div>
-
-              <pre className="bg-gray-900 rounded-lg p-4 text-sm overflow-x-auto text-green-400 border border-gray-600 custom-scrollbar text-left">
-                <code className="text-left whitespace-pre">
-                  {colors
-                    .map((color) => formatColor(color.hex, exportFormat))
-                    .join("\n")}
-                </code>
-              </pre>
-            </div>
+          {/* Export Preview Column (Span 4) */}
+          <div className="xl:col-span-4">
+            <Textarea
+              label="Compiled Palette output:"
+              id="palette-output-preview"
+              value={getExportPreviewText()}
+              readOnly={true}
+              placeholder="Palette colors export preview..."
+              rows={16}
+            />
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
-};
-
-export default ColorPaletteGenerator;
+}
