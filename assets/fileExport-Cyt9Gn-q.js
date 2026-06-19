@@ -1,0 +1,1 @@
+const l=(r,c,n="text/plain")=>{try{const o=new Blob([r],{type:n}),t=URL.createObjectURL(o),e=document.createElement("a");return e.href=t,e.download=c,document.body.appendChild(e),e.click(),document.body.removeChild(e),URL.revokeObjectURL(t),!0}catch(o){return console.error("File download failed:",o),!1}};export{l as e};
