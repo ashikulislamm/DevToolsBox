@@ -1,7 +1,7 @@
 import { lazy } from "react";
 import { 
   FaCode, FaLock, FaKey, FaSearch, FaFileCode, FaDocker, 
-  FaGitAlt, FaPalette, FaCss3Alt, FaEye, FaMarkdown, FaMobile, FaTerminal
+  FaGitAlt, FaPalette, FaCss3Alt, FaEye, FaMarkdown, FaMobile, FaTerminal, FaClock
 } from "react-icons/fa";
 
 export const ALL_TOOLS = [
@@ -76,6 +76,20 @@ export const ALL_TOOLS = [
     }
   },
   {
+    id: "cron-tester",
+    title: "Cron Expression Builder & Tester",
+    category: "Data Tools",
+    path: "/DevToolsBox/tools/cron-tester",
+    desc: "Build, test, parse, and visualize cron expressions dynamically.",
+    icon: FaClock,
+    component: lazy(() => import("../pages/tools/CronTester.jsx")),
+    seo: {
+      title: "Online Cron Expression Builder & Tester - DevToolsBox",
+      description: "Generate and test cron schedule expressions. View human-readable translations and next execution dates dynamically.",
+      keywords: "cron builder, cron expression tester, crontab, cron generator, cron online"
+    }
+  },
+  {
     id: "snippet-generator",
     title: "Snippet Generator",
     category: "Code Generators",
@@ -120,7 +134,7 @@ export const ALL_TOOLS = [
   {
     id: "css-gradient",
     title: "CSS Gradient Generator",
-    category: "Code Generators",
+    category: "UI/Frontend Tools",
     path: "/DevToolsBox/tools/css-gradient",
     desc: "Create beautiful linear and radial CSS gradients visually.",
     icon: FaPalette,
@@ -134,7 +148,7 @@ export const ALL_TOOLS = [
   {
     id: "css-animation",
     title: "CSS Animation Generator",
-    category: "Code Generators",
+    category: "UI/Frontend Tools",
     path: "/DevToolsBox/tools/css-animation",
     desc: "Create keyframe-based CSS transitions and animations.",
     icon: FaCss3Alt,
@@ -148,7 +162,7 @@ export const ALL_TOOLS = [
   {
     id: "tailwind-visualizer",
     title: "Tailwind Visualizer",
-    category: "Code Generators",
+    category: "UI/Frontend Tools",
     path: "/DevToolsBox/tools/tailwind-visualizer",
     desc: "Preview and copy utility classes in real-time.",
     icon: FaEye,
