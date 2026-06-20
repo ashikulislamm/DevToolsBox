@@ -1,4 +1,4 @@
-import{r as i,u as w,j as e,c as T,l as D}from"./index-BqCVcBBf.js";import{C as P,a as N,B as p}from"./Button-DmI0f6BQ.js";import{T as y}from"./Textarea-D1eCXekL.js";import{I as M}from"./Input-1J-PCWzW.js";import{u as A}from"./useClipboard-J38lvy7o.js";const B=[{name:"Node.js",category:"Languages",content:`# Logs
+import{r as i,u as w,j as e,c as T,p as D}from"./index-Bty-QInu.js";import{C as P,a as N,B as p}from"./Button-CCPPGs9u.js";import{T as y}from"./Textarea-Be-QwQXI.js";import{I as M}from"./Input-DLl--kSo.js";import{u as A}from"./useClipboard-COVLFtXx.js";const B=[{name:"Node.js",category:"Languages",content:`# Logs
 logs
 *.log
 npm-debug.log*
