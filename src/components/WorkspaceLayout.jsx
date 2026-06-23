@@ -47,14 +47,14 @@ export const WorkspaceLayout = () => {
     <div className="flex flex-1 relative overflow-hidden h-[calc(100vh-4rem)]">
       {/* Sidebar Navigation */}
       <aside 
-        className={`bg-[#0F172A] border-r border-slate-800 flex flex-col transition-all duration-300 relative z-30 ${
+        className={`bg-neutral-50 dark:bg-slate-900 border-r border-neutral-200 dark:border-slate-800 flex flex-col transition-all duration-300 relative z-30 ${
           isCollapsed ? "w-14" : "w-64"
         } shrink-0 hidden md:flex`}
       >
         {/* Toggle Collapse Button */}
         <button 
           onClick={handleToggleCollapse}
-          className="absolute -right-3 top-5 w-6 h-6 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white cursor-pointer z-40 shadow-sm"
+          className="absolute -right-3 top-5 w-6 h-6 rounded-full bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-800 flex items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white cursor-pointer z-40 shadow-sm"
           title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
         >
           {isCollapsed ? <FaChevronRight className="w-2.5 h-2.5" /> : <FaChevronLeft className="w-2.5 h-2.5" />}
@@ -65,11 +65,11 @@ export const WorkspaceLayout = () => {
           {Object.entries(categories).map(([categoryName, tools]) => (
             <div key={categoryName} className="space-y-1">
               {!isCollapsed ? (
-                <h4 className="text-[10px] uppercase font-bold tracking-wider text-slate-500 px-3 py-1 font-brand">
+                <h4 className="text-[10px] uppercase font-bold tracking-wider text-neutral-450 dark:text-neutral-500 px-3 py-1 font-brand">
                   {categoryName}
                 </h4>
               ) : (
-                <div className="border-t border-slate-800/60 my-2 mx-1" />
+                <div className="border-t border-neutral-200/60 dark:border-slate-800/40 my-2 mx-1" />
               )}
               
               <div className="space-y-0.5">
@@ -85,12 +85,12 @@ export const WorkspaceLayout = () => {
                         isCollapsed ? "justify-center p-2.5" : "px-3 py-2.5 gap-3"
                       } ${
                         isActive 
-                          ? "bg-slate-800 text-white font-medium shadow-sm" 
-                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/30"
+                          ? "bg-neutral-200/60 dark:bg-slate-800 text-neutral-900 dark:text-white font-medium shadow-xs" 
+                          : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/30 dark:hover:bg-slate-800/40"
                       }`}
                       title={isCollapsed ? tool.title : undefined}
                     >
-                      <div className={`transition-colors ${isActive ? "text-[var(--accent-color)]" : "text-slate-500 group-hover:text-slate-300"}`}>
+                      <div className={`transition-colors ${isActive ? "text-neutral-900 dark:text-white" : "text-neutral-400 dark:text-neutral-500 group-hover:text-neutral-600 dark:group-hover:text-neutral-300"}`}>
                         {getToolIcon(tool.id)}
                       </div>
 
@@ -104,12 +104,12 @@ export const WorkspaceLayout = () => {
 
                       {/* Tooltip for collapsed view */}
                       {isCollapsed && (
-                        <div className="absolute left-14 bg-slate-900 border border-slate-800 text-white text-[10px] px-2.5 py-1.5 rounded-md shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 whitespace-nowrap z-50">
+                        <div className="absolute left-14 bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-800 text-neutral-800 dark:text-white text-[10px] px-2.5 py-1.5 rounded-md shadow-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 whitespace-nowrap z-50">
                           <div className="font-semibold flex items-center gap-1.5">
                             {tool.title}
                             {isFav && <FaStar className="w-2.5 h-2.5 text-yellow-500" />}
                           </div>
-                          <div className="text-slate-400 text-[9px] mt-0.5">{tool.desc}</div>
+                          <div className="text-neutral-500 dark:text-neutral-400 text-[9px] mt-0.5">{tool.desc}</div>
                         </div>
                       )}
                     </Link>
@@ -122,7 +122,7 @@ export const WorkspaceLayout = () => {
       </aside>
 
       {/* Main Workspace Frame */}
-      <main className="flex-1 overflow-y-auto bg-slate-950 flex flex-col relative custom-scrollbar">
+      <main className="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-950 flex flex-col relative custom-scrollbar">
         <div className="flex-1">
           <Outlet />
         </div>

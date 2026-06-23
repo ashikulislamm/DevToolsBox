@@ -14,11 +14,11 @@ export const Button = ({
   const baseStyles = "inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-150 active:scale-98 select-none disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 cursor-pointer";
   
   const variants = {
-    primary: "bg-[var(--accent-color)] hover:bg-[#9790f9] text-white shadow-sm border border-transparent",
-    secondary: "bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700/60 shadow-xs",
+    primary: "bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-100 text-white dark:text-neutral-900 shadow-sm border border-transparent",
+    secondary: "bg-white dark:bg-slate-900 hover:bg-neutral-50 dark:hover:bg-slate-800 text-neutral-900 dark:text-white border border-neutral-900 dark:border-slate-700 shadow-xs",
     danger: "bg-rose-600 hover:bg-rose-700 text-white shadow-sm border border-transparent",
-    outline: "bg-transparent border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800/40",
-    ghost: "bg-transparent text-slate-400 hover:text-white hover:bg-slate-850",
+    outline: "bg-transparent border border-neutral-200 dark:border-slate-800 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-slate-800/60",
+    ghost: "bg-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-105 dark:hover:bg-slate-850/60",
   };
 
   const sizes = {

@@ -143,16 +143,16 @@ export const CommandPalette = ({ isOpen, onClose }) => {
 
   return (
     <div 
-      className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-start justify-center pt-[15vh] z-50 transition-opacity duration-200"
+      className="fixed inset-0 bg-neutral-900/20 backdrop-blur-xs flex items-start justify-center pt-[15vh] z-50 transition-opacity duration-200"
       onClick={onClose}
     >
       <div 
-        className="bg-[#0F172A] border border-slate-800 rounded-xl shadow-2xl max-w-xl w-full mx-4 overflow-hidden flex flex-col font-sans max-h-[500px]"
+        className="bg-white border border-neutral-200 rounded-xl shadow-2xl max-w-xl w-full mx-4 overflow-hidden flex flex-col font-sans max-h-[500px]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Input Bar */}
-        <div className="flex items-center border-b border-slate-800 px-4">
-          <FaSearch className="text-slate-400 mr-3 w-4 h-4" />
+        <div className="flex items-center border-b border-neutral-200 px-4">
+          <FaSearch className="text-neutral-400 mr-3 w-4 h-4" />
           <input
             ref={inputRef}
             type="text"
@@ -163,9 +163,9 @@ export const CommandPalette = ({ isOpen, onClose }) => {
               setActiveIndex(0);
             }}
             onKeyDown={handleKeyDown}
-            className="w-full text-slate-100 bg-transparent placeholder-slate-500 py-4 outline-none text-sm border-0 focus:ring-0 focus:outline-none"
+            className="w-full text-neutral-900 bg-transparent placeholder-neutral-450 py-4 outline-none text-sm border-0 focus:ring-0 focus:outline-none"
           />
-          <div className="flex items-center gap-1.5 text-[10px] text-slate-500 bg-slate-900 px-2 py-1 rounded border border-slate-800 font-mono">
+          <div className="flex items-center gap-1.5 text-[10px] text-neutral-500 bg-neutral-50 px-2 py-1 rounded border border-neutral-200 font-mono">
             <span>ESC</span>
           </div>
         </div>
@@ -176,10 +176,10 @@ export const CommandPalette = ({ isOpen, onClose }) => {
           className="flex-1 overflow-y-auto p-2 custom-scrollbar"
         >
           {filteredTools.length === 0 ? (
-            <div className="py-8 px-4 text-center text-slate-400">
-              <FaTerminal className="mx-auto w-8 h-8 text-slate-600 mb-3" />
+            <div className="py-8 px-4 text-center text-neutral-550">
+              <FaTerminal className="mx-auto w-8 h-8 text-neutral-400 mb-3" />
               <p className="text-sm font-semibold">No tools found matching "{query}"</p>
-              <p className="text-xs text-slate-500 mt-1">Try searching another keyword or clear the query</p>
+              <p className="text-xs text-neutral-500 mt-1">Try searching another keyword or clear the query</p>
             </div>
           ) : (
             groupOrder.map(group => {
@@ -188,9 +188,9 @@ export const CommandPalette = ({ isOpen, onClose }) => {
 
               return (
                 <div key={group} className="mb-2">
-                  <div className="text-[10px] uppercase font-bold tracking-wider text-slate-500 px-3 py-1 flex items-center gap-1.5 font-brand">
-                    {group === "Favorite" && <FaStar className="text-yellow-400 w-2.5 h-2.5" />}
-                    {group === "Recent" && <FaHistory className="text-blue-400 w-2.5 h-2.5" />}
+                  <div className="text-[10px] uppercase font-bold tracking-wider text-neutral-450 px-3 py-1 flex items-center gap-1.5 font-brand">
+                    {group === "Favorite" && <FaStar className="text-yellow-500 w-2.5 h-2.5" />}
+                    {group === "Recent" && <FaHistory className="text-neutral-500 w-2.5 h-2.5" />}
                     {group === "Favorite" ? "Starred Favorites" : group === "Recent" ? "Recently Used" : group}
                   </div>
                   <div className="space-y-0.5 mt-1">
@@ -207,20 +207,20 @@ export const CommandPalette = ({ isOpen, onClose }) => {
                           onMouseEnter={() => setActiveIndex(currentFlatIndex)}
                           className={`flex items-center justify-between px-3 py-2.5 rounded-lg cursor-pointer transition-colors duration-150 ${
                             isActive 
-                              ? "bg-slate-800 text-white" 
-                              : "text-slate-300 hover:bg-slate-800/40 hover:text-white"
+                              ? "bg-neutral-100 text-neutral-900 font-medium" 
+                              : "text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900"
                           }`}
                         >
                           <div className="flex-1 min-w-0 pr-4">
                             <div className="text-xs font-semibold flex items-center gap-2">
                               {tool.title}
-                              {group === "Favorite" && <span className="text-[8px] bg-yellow-900/40 text-yellow-300 border border-yellow-800/40 px-1 rounded">Favorite</span>}
+                              {group === "Favorite" && <span className="text-[8px] bg-yellow-50 text-yellow-800 border border-yellow-200 px-1 rounded">Favorite</span>}
                             </div>
-                            <div className="text-[10px] text-slate-400 truncate mt-0.5">{tool.desc}</div>
+                            <div className="text-[10px] text-neutral-500 truncate mt-0.5">{tool.desc}</div>
                           </div>
                           
                           {isActive && (
-                            <div className="flex items-center gap-1 text-[9px] text-slate-400 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-700 font-mono">
+                            <div className="flex items-center gap-1 text-[9px] text-neutral-500 bg-white px-1.5 py-0.5 rounded border border-neutral-200 font-mono">
                               <FaKeyboard className="w-2.5 h-2.5" />
                               <span>↵ Enter</span>
                             </div>
@@ -236,7 +236,7 @@ export const CommandPalette = ({ isOpen, onClose }) => {
         </div>
 
         {/* Footer shortcuts */}
-        <div className="border-t border-slate-800 px-4 py-2 bg-slate-950 flex justify-between items-center text-[10px] text-slate-500 font-mono">
+        <div className="border-t border-neutral-200 px-4 py-2.5 bg-neutral-50 flex justify-between items-center text-[10px] text-neutral-500 font-mono">
           <div className="flex items-center gap-3">
             <span>↑↓ to navigate</span>
             <span>↵ to select</span>

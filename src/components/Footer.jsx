@@ -5,7 +5,7 @@ import { FaFacebookF, FaInstagram, FaTwitter, FaGithub, FaDribbble, FaPaperPlane
 
 export const Footer = () => {
   return (
-    <footer className="bg-[#0F172A] text-slate-300 border-t border-slate-800 w-full mt-auto">
+    <footer className="bg-white dark:bg-slate-900 text-neutral-600 dark:text-neutral-400 border-t border-neutral-200 dark:border-slate-800 w-full mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         
         {/* Top Row Grid */}
@@ -13,30 +13,30 @@ export const Footer = () => {
           {/* Logo Group */}
           <div className="flex items-center select-none">
             <img src={Logo} alt="Logo" className="h-7 w-7 mr-2.5" />
-            <span className="text-lg font-bold text-white font-brand tracking-tight">
-              DevTools<span className="text-[var(--accent-color)]">Box</span>
+            <span className="text-lg font-bold text-neutral-900 dark:text-white font-brand tracking-tight">
+              DevTools<span className="text-neutral-900 dark:text-white">Box</span>
             </span>
           </div>
 
           {/* Site Navigation Links */}
-          <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-semibold text-slate-400">
+          <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-semibold text-neutral-500 dark:text-neutral-400">
             <li>
-              <Link to="/DevToolsBox" className="hover:text-white transition-colors">
+              <Link to="/DevToolsBox" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
                 Home
               </Link>
             </li>
             <li>
-              <Link to="/DevToolsBox/about" className="hover:text-white transition-colors">
+              <Link to="/DevToolsBox/about" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
                 About
               </Link>
             </li>
             <li>
-              <Link to="/DevToolsBox/contact" className="hover:text-white transition-colors">
+              <Link to="/DevToolsBox/contact" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
                 Contact
               </Link>
             </li>
             <li>
-              <a href="#" className="hover:text-white transition-colors">
+              <a href="#" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
                 Privacy Policy
               </a>
             </li>
@@ -49,11 +49,11 @@ export const Footer = () => {
                 type="email"
                 required
                 placeholder="Subscribe to updates"
-                className="w-full sm:w-64 rounded-l-lg bg-slate-900 border border-slate-800 text-xs text-slate-200 pl-4 pr-3 py-2.5 focus:border-[var(--accent-color)] focus:ring-2 focus:ring-[var(--accent-color)]/25 outline-none transition-all placeholder:text-slate-600"
+                className="w-full sm:w-64 rounded-l-lg bg-white dark:bg-slate-950 border border-neutral-200 dark:border-slate-800 text-xs text-neutral-900 dark:text-white pl-4 pr-3 py-2.5 focus:border-neutral-900 dark:focus:border-white focus:ring-2 focus:ring-neutral-900/5 dark:focus:ring-white/5 outline-none transition-all placeholder:text-neutral-400 dark:placeholder:text-neutral-500"
               />
               <button
                 type="submit"
-                className="px-4 py-2.5 bg-[var(--accent-color)] hover:bg-[#9790f9] text-white rounded-r-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer select-none shadow-sm"
+                className="px-4 py-2.5 bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-100 text-white dark:text-neutral-900 rounded-r-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer select-none shadow-sm"
               >
                 <FaPaperPlane className="w-2.5 h-2.5" />
                 <span>Join</span>
@@ -63,29 +63,29 @@ export const Footer = () => {
         </div>
 
         {/* Horizontal Divider */}
-        <div className="border-t border-slate-800/80 my-8" />
+        <div className="border-t border-neutral-100 dark:border-slate-800/80 my-8" />
 
         {/* Bottom Row */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-          <span className="text-xs text-slate-500 font-medium">
+          <span className="text-xs text-neutral-450 dark:text-neutral-500 font-medium">
             © {new Date().getFullYear()} DevToolsBox™. Open-source MIT License.
           </span>
           
           {/* Social Icons Group */}
           <div className="flex space-x-5">
-            <a href="https://github.com/ashikulislamm" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-white transition-colors text-sm" title="GitHub">
+            <a href="https://github.com/ashikulislamm" target="_blank" rel="noopener noreferrer" className="text-neutral-450 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors text-sm" title="GitHub">
               <FaGithub />
             </a>
-            <a href="#" className="text-slate-500 hover:text-white transition-colors text-sm" title="Twitter">
+            <a href="#" className="text-neutral-450 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors text-sm" title="Twitter">
               <FaTwitter />
             </a>
-            <a href="#" className="text-slate-500 hover:text-white transition-colors text-sm" title="Facebook">
+            <a href="#" className="text-neutral-450 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors text-sm" title="Facebook">
               <FaFacebookF />
             </a>
-            <a href="#" className="text-slate-500 hover:text-white transition-colors text-sm" title="Instagram">
+            <a href="#" className="text-neutral-450 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors text-sm" title="Instagram">
               <FaInstagram />
             </a>
-            <a href="#" className="text-slate-500 hover:text-white transition-colors text-sm" title="Dribbble">
+            <a href="#" className="text-neutral-450 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors text-sm" title="Dribbble">
               <FaDribbble />
             </a>
           </div>

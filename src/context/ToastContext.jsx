@@ -50,27 +50,27 @@ const ToastItem = ({ toast, onDismiss }) => {
   const getIcon = () => {
     switch (type) {
       case "success":
-        return <FaCheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />;
+        return <FaCheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />;
       case "error":
-        return <FaExclamationCircle className="w-4 h-4 text-rose-400 shrink-0" />;
+        return <FaExclamationCircle className="w-4 h-4 text-rose-600 shrink-0" />;
       default:
-        return <FaInfoCircle className="w-4 h-4 text-sky-400 shrink-0" />;
+        return <FaInfoCircle className="w-4 h-4 text-blue-600 shrink-0" />;
     }
   };
 
   const getBgColor = () => {
     switch (type) {
-      case "success": return "bg-[#061B14] border-emerald-950/80";
-      case "error": return "bg-[#250E12] border-rose-950/80";
-      default: return "bg-[#091523] border-sky-950/80";
+      case "success": return "bg-white border-emerald-100 shadow-md shadow-emerald-500/5";
+      case "error": return "bg-white border-rose-100 shadow-md shadow-rose-500/5";
+      default: return "bg-white border-neutral-200 shadow-md shadow-neutral-500/5";
     }
   };
 
   const getTextColor = () => {
     switch (type) {
-      case "success": return "text-emerald-300";
-      case "error": return "text-rose-300";
-      default: return "text-sky-300";
+      case "success": return "text-neutral-900";
+      case "error": return "text-neutral-900";
+      default: return "text-neutral-900";
     }
   };
 
@@ -82,7 +82,7 @@ const ToastItem = ({ toast, onDismiss }) => {
       <p className="text-xs font-semibold leading-relaxed flex-1">{message}</p>
       <button
         onClick={() => onDismiss(id)}
-        className="text-slate-400 hover:text-white transition-colors p-0.5 rounded cursor-pointer shrink-0"
+        className="text-neutral-400 hover:text-neutral-800 transition-colors p-0.5 rounded cursor-pointer shrink-0"
       >
         <FaTimes className="w-3 h-3" />
       </button>

@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import Logo from "../assets/Logo.png";
 import { Link, useLocation } from "react-router-dom";
 import { CommandPalette } from "./CommandPalette.jsx";
-import { FaSearch, FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
+import { FaSearch, FaChevronDown, FaBars, FaTimes, FaSun, FaMoon } from "react-icons/fa";
+import { useTheme } from "../context/ThemeContext.jsx";
 import { ALL_TOOLS } from "../config/tools.jsx";
 
 export const Navbar = () => {
@@ -11,6 +12,7 @@ export const Navbar = () => {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const navRef = useRef(null);
   const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   // close dropdown on outside click (desktop)
   useEffect(() => {
@@ -57,14 +59,14 @@ export const Navbar = () => {
 
   return (
     <>
-      <nav className="bg-[#0F172A]/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40 w-full transition-all">
+      <nav className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-neutral-200 dark:border-slate-800 sticky top-0 z-40 w-full transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             {/* Logo */}
             <Link className="flex items-center group" to="/DevToolsBox">
               <img className="h-8 w-8 mr-2.5 transition-transform group-hover:scale-105" src={Logo} alt="Logo" />
-              <span className="text-white font-bold text-lg font-brand tracking-tight">
-                DevTools<span className="text-[var(--accent-color)]">Box</span>
+              <span className="text-neutral-900 dark:text-white font-bold text-lg font-brand tracking-tight">
+                DevTools<span className="text-neutral-900 dark:text-white">Box</span>
               </span>
             </Link>
 
@@ -74,8 +76,8 @@ export const Navbar = () => {
                 to="/DevToolsBox"
                 className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                   isActivePath("/DevToolsBox")
-                    ? "text-[var(--accent-color)] bg-slate-800/40"
-                    : "text-slate-300 hover:text-white hover:bg-slate-800/20"
+                    ? "text-neutral-900 dark:text-white bg-neutral-100 dark:bg-slate-850 font-semibold"
+                    : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-slate-800/60"
                 }`}
               >
                 Home
@@ -84,8 +86,8 @@ export const Navbar = () => {
                 to="/DevToolsBox/about"
                 className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                   isActivePath("/DevToolsBox/about")
-                    ? "text-[var(--accent-color)] bg-slate-800/40"
-                    : "text-slate-300 hover:text-white hover:bg-slate-800/20"
+                    ? "text-neutral-900 dark:text-white bg-neutral-100 dark:bg-slate-850 font-semibold"
+                    : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-slate-800/60"
                 }`}
               >
                 About
@@ -105,8 +107,8 @@ export const Navbar = () => {
                       }}
                       className={`flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                         hasActiveItem
-                          ? "text-[var(--accent-color)] bg-slate-800/40"
-                          : "text-slate-300 hover:text-white hover:bg-slate-800/20"
+                          ? "text-neutral-900 dark:text-white bg-neutral-100 dark:bg-slate-850 font-semibold"
+                          : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-slate-800/60"
                       }`}
                     >
                       <span>{category}</span>
@@ -119,7 +121,7 @@ export const Navbar = () => {
 
                     {activeCategory === category && (
                       <div
-                        className="absolute z-20 mt-2.5 w-56 bg-[#0F172A] border border-slate-800 rounded-lg shadow-xl py-1 overflow-hidden"
+                        className="absolute z-20 mt-2.5 w-56 bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-800 rounded-lg shadow-lg py-1 overflow-hidden"
                         onClick={(e) => e.stopPropagation()}
                       >
                         {services[category].map((item) => (
@@ -128,8 +130,8 @@ export const Navbar = () => {
                             to={item.path}
                             className={`block px-4 py-2.5 text-xs transition-colors ${
                               isActivePath(item.path)
-                                ? "text-[var(--accent-color)] bg-slate-800/50 font-medium"
-                                : "text-slate-300 hover:text-white hover:bg-slate-800/30"
+                                ? "text-neutral-900 dark:text-white bg-neutral-100 dark:bg-slate-850 font-semibold"
+                                : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-slate-800/60"
                             }`}
                             onClick={() => setActiveCategory(null)}
                           >
@@ -146,38 +148,54 @@ export const Navbar = () => {
                 to="/DevToolsBox/contact"
                 className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                   isActivePath("/DevToolsBox/contact")
-                    ? "text-[var(--accent-color)] bg-slate-800/40"
-                    : "text-slate-300 hover:text-white hover:bg-slate-800/20"
+                    ? "text-neutral-900 dark:text-white bg-neutral-100 dark:bg-slate-850 font-semibold"
+                    : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-slate-800/60"
                 }`}
               >
                 Contact
               </Link>
             </div>
 
-            {/* Right Side Search Trigger */}
-            <div className="hidden md:flex items-center space-x-4">
+            {/* Right Side Search Trigger & Theme Toggle */}
+            <div className="hidden md:flex items-center space-x-3">
               <button
                 onClick={() => setIsCommandPaletteOpen(true)}
-                className="flex items-center gap-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 px-3.5 py-1.75 rounded-lg transition-all text-xs cursor-pointer shadow-sm"
+                className="flex items-center gap-2 bg-neutral-50 dark:bg-slate-800 border border-neutral-200 dark:border-slate-700 hover:border-neutral-300 dark:hover:border-slate-650 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 px-3.5 py-1.75 rounded-lg transition-all text-xs cursor-pointer shadow-xs"
               >
-                <FaSearch className="w-3 h-3 text-slate-500" />
+                <FaSearch className="w-3 h-3 text-neutral-400 dark:text-neutral-500" />
                 <span>Search tools...</span>
-                <kbd className="bg-slate-800 border border-slate-700/60 px-1.5 py-0.5 rounded text-[9px] text-slate-400 font-mono select-none">⌘K</kbd>
+                <kbd className="bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-800 px-1.5 py-0.5 rounded text-[9px] text-neutral-500 dark:text-neutral-400 font-mono select-none">⌘K</kbd>
+              </button>
+
+              <button
+                onClick={toggleTheme}
+                className="p-2 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white bg-neutral-50 dark:bg-slate-800 hover:bg-neutral-100 dark:hover:bg-slate-750 rounded-lg border border-neutral-200 dark:border-slate-700 transition-all cursor-pointer shadow-xs"
+                title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              >
+                {theme === "dark" ? <FaSun className="w-3.5 h-3.5" /> : <FaMoon className="w-3.5 h-3.5" />}
               </button>
             </div>
 
-            {/* Mobile button */}
+            {/* Mobile button block */}
             <div className="md:hidden flex items-center gap-2">
               <button
+                onClick={toggleTheme}
+                className="p-2 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white bg-neutral-50 dark:bg-slate-850 rounded-md border border-neutral-200 dark:border-slate-800 cursor-pointer"
+                title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              >
+                {theme === "dark" ? <FaSun className="w-4 h-4" /> : <FaMoon className="w-4 h-4" />}
+              </button>
+              
+              <button
                 onClick={() => setIsCommandPaletteOpen(true)}
-                className="p-2 text-slate-400 hover:text-white bg-slate-900 rounded-md border border-slate-800"
+                className="p-2 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white bg-neutral-50 dark:bg-slate-850 rounded-md border border-neutral-200 dark:border-slate-800 cursor-pointer"
                 title="Search Tools"
               >
                 <FaSearch className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="p-2 text-slate-400 hover:text-white bg-slate-900 rounded-md border border-slate-800"
+                className="p-2 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white bg-neutral-50 dark:bg-slate-850 rounded-md border border-neutral-200 dark:border-slate-800 cursor-pointer"
               >
                 {isOpen ? <FaTimes className="w-4 h-4" /> : <FaBars className="w-4 h-4" />}
               </button>
@@ -187,14 +205,14 @@ export const Navbar = () => {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="md:hidden bg-[#0F172A] border-b border-slate-800">
+          <div className="md:hidden bg-white dark:bg-slate-900 border-b border-neutral-200 dark:border-slate-800">
             <div className="flex flex-col space-y-1 py-3 px-4">
               <Link
                 to="/DevToolsBox"
                 className={`py-2 px-3 text-sm rounded-md transition-colors ${
                   isActivePath("/DevToolsBox")
-                    ? "text-[var(--accent-color)] bg-slate-800/40 font-medium"
-                    : "text-slate-300 hover:text-white hover:bg-slate-800/20"
+                    ? "text-neutral-900 dark:text-white bg-neutral-100 dark:bg-slate-850 font-semibold"
+                    : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-55/20 dark:hover:bg-slate-800/40"
                 }`}
                 onClick={() => setIsOpen(false)}
               >
@@ -204,8 +222,8 @@ export const Navbar = () => {
                 to="/DevToolsBox/about"
                 className={`py-2 px-3 text-sm rounded-md transition-colors ${
                   isActivePath("/DevToolsBox/about")
-                    ? "text-[var(--accent-color)] bg-slate-800/40 font-medium"
-                    : "text-slate-300 hover:text-white hover:bg-slate-800/20"
+                    ? "text-neutral-900 dark:text-white bg-neutral-100 dark:bg-slate-850 font-semibold"
+                    : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-55/20 dark:hover:bg-slate-800/40"
                 }`}
                 onClick={() => setIsOpen(false)}
               >
@@ -225,8 +243,8 @@ export const Navbar = () => {
                       }
                       className={`w-full flex items-center justify-between py-2 px-3 text-sm rounded-md transition-colors ${
                         isCatActive 
-                          ? "text-[var(--accent-color)] bg-slate-800/20 font-medium" 
-                          : "text-slate-300 hover:text-white hover:bg-slate-800/20"
+                          ? "text-neutral-900 dark:text-white bg-neutral-100 dark:bg-slate-850 font-semibold" 
+                          : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-55/20 dark:hover:bg-slate-800/40"
                       }`}
                     >
                       <span>{category}</span>
@@ -238,15 +256,15 @@ export const Navbar = () => {
                     </button>
 
                     {activeCategory === category && (
-                      <div className="mt-1 bg-slate-900/60 border border-slate-800 rounded-lg mx-2 mb-2 overflow-hidden">
+                      <div className="mt-1 bg-neutral-50 dark:bg-slate-950 border border-neutral-200 dark:border-slate-800 rounded-lg mx-2 mb-2 overflow-hidden">
                         {services[category].map((item) => (
                           <Link
                             key={item.name}
                             to={item.path}
                             className={`block px-4 py-2.5 text-xs transition-colors ${
                               isActivePath(item.path)
-                                ? "text-[var(--accent-color)] bg-slate-800/50 font-medium"
-                                : "text-slate-300 hover:text-white hover:bg-slate-800/20"
+                                ? "text-neutral-900 dark:text-white bg-neutral-100 dark:bg-slate-850 font-semibold"
+                                : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50/50 dark:hover:bg-slate-800/30"
                             }`}
                             onClick={() => {
                               setActiveCategory(null);
@@ -266,8 +284,8 @@ export const Navbar = () => {
                 to="/DevToolsBox/contact"
                 className={`py-2 px-3 text-sm rounded-md transition-colors ${
                   isActivePath("/DevToolsBox/contact")
-                    ? "text-[var(--accent-color)] bg-slate-800/40 font-medium"
-                    : "text-slate-300 hover:text-white hover:bg-slate-800/20"
+                    ? "text-neutral-900 dark:text-white bg-neutral-100 dark:bg-slate-850 font-semibold"
+                    : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-55/20 dark:hover:bg-slate-800/40"
                 }`}
                 onClick={() => setIsOpen(false)}
               >

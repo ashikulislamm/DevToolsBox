@@ -104,17 +104,17 @@ export const Home = () => {
         
         {/* Dynamic Personal Dashboard Section */}
         {(favoriteProducts.length > 0 || recentProducts.length > 0) && (
-          <div className="mb-16 border-b border-slate-200 pb-12">
-            <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2 font-brand">
-              <FaTools className="text-[var(--accent-color)] w-4 h-4" />
+          <div className="mb-16 border-b border-neutral-200 dark:border-slate-800 pb-12">
+            <h3 className="text-lg font-bold text-neutral-900 dark:text-white mb-6 flex items-center gap-2 font-brand">
+              <FaTools className="text-neutral-700 dark:text-neutral-300 w-4 h-4" />
               Your Workspace Dashboard
             </h3>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Starred Favorites Block */}
               {favoriteProducts.length > 0 && (
-                <div className="bg-slate-100/50 rounded-2xl p-6 border border-slate-200/60 flex flex-col">
-                  <h4 className="text-sm font-semibold text-slate-800 mb-4 flex items-center gap-2 font-brand">
+                <div className="bg-neutral-50 dark:bg-slate-900 rounded-2xl p-6 border border-neutral-200 dark:border-slate-800 flex flex-col">
+                  <h4 className="text-sm font-semibold text-neutral-800 dark:text-neutral-200 mb-4 flex items-center gap-2 font-brand">
                     <FaStar className="text-yellow-500 w-3.5 h-3.5" />
                     Pinned Favorites ({favoriteProducts.length})
                   </h4>
@@ -137,9 +137,9 @@ export const Home = () => {
 
               {/* Recently Visited Block */}
               {recentProducts.length > 0 && (
-                <div className="bg-slate-100/50 rounded-2xl p-6 border border-slate-200/60 flex flex-col">
-                  <h4 className="text-sm font-semibold text-slate-800 mb-4 flex items-center gap-2 font-brand">
-                    <FaHistory className="text-blue-500 w-3.5 h-3.5" />
+                <div className="bg-neutral-50 dark:bg-slate-900 rounded-2xl p-6 border border-neutral-200 dark:border-slate-800 flex flex-col">
+                  <h4 className="text-sm font-semibold text-neutral-800 dark:text-neutral-200 mb-4 flex items-center gap-2 font-brand">
+                    <FaHistory className="text-neutral-500 dark:text-neutral-400 w-3.5 h-3.5" />
                     Recently Used
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
@@ -164,23 +164,23 @@ export const Home = () => {
 
         {/* Categories Section Header with Filter */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 font-brand">
+          <h2 className="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-white font-brand">
             Tool Directory
-            <span className="text-xs text-slate-500 ml-2 block sm:inline font-normal">
+            <span className="text-xs text-neutral-500 dark:text-neutral-400 ml-2 block sm:inline font-normal">
               ({filteredProducts.length} {filteredProducts.length === 1 ? "utility" : "utilities"} listed)
             </span>
           </h2>
 
           {/* Desktop Categories Segment Tabs */}
-          <div className="hidden lg:flex bg-slate-200/60 p-1 rounded-xl border border-slate-300/40 select-none">
+          <div className="hidden lg:flex bg-neutral-100 dark:bg-slate-900 p-1 rounded-xl border border-neutral-200 dark:border-slate-800 select-none">
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => handleCategoryChange(category)}
                 className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
                   selectedCategory === category
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-500 hover:text-slate-800"
+                    ? "bg-white dark:bg-slate-800 text-neutral-900 dark:text-white shadow-sm"
+                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
                 }`}
               >
                 {category}
@@ -192,7 +192,7 @@ export const Home = () => {
           <div className="relative w-full sm:w-60 lg:hidden" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="bg-slate-900 text-white px-4 py-2.5 rounded-xl cursor-pointer transition-all flex items-center justify-between w-full text-xs font-semibold"
+              className="bg-white dark:bg-slate-900 border border-neutral-900 dark:border-slate-700 text-neutral-900 dark:text-white px-4 py-2.5 rounded-xl cursor-pointer transition-all flex items-center justify-between w-full text-xs font-semibold"
             >
               <span>{selectedCategory}</span>
               <FaChevronDown
@@ -203,7 +203,7 @@ export const Home = () => {
             </button>
 
             {dropdownOpen && (
-              <div className="absolute z-10 mt-1.5 w-full bg-slate-900 rounded-xl shadow-lg border border-slate-800 overflow-hidden py-1">
+              <div className="absolute z-10 mt-1.5 w-full bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-neutral-200 dark:border-slate-800 overflow-hidden py-1">
                 {categories.map((category) => (
                   <button
                     key={category}
@@ -211,9 +211,9 @@ export const Home = () => {
                       handleCategoryChange(category);
                       setDropdownOpen(false);
                     }}
-                    className={`w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white transition-colors ${
+                    className={`w-full text-left px-4 py-2.5 text-xs text-neutral-700 dark:text-neutral-350 hover:bg-neutral-55 dark:hover:bg-slate-800 hover:text-neutral-900 dark:hover:text-white transition-colors ${
                       selectedCategory === category
-                        ? "bg-slate-800 text-white font-semibold"
+                        ? "bg-neutral-100 dark:bg-slate-800 text-neutral-900 dark:text-white font-semibold"
                         : ""
                     }`}
                   >
@@ -258,8 +258,8 @@ export const Home = () => {
 
         {/* Empty state */}
         {filteredProducts.length === 0 && (
-          <div className="text-center py-16 bg-white border border-slate-200 rounded-2xl">
-            <p className="text-slate-400 text-sm font-medium">
+          <div className="text-center py-16 bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-800 rounded-2xl">
+            <p className="text-neutral-500 dark:text-neutral-400 text-sm font-medium">
               No developer tools found in this category.
             </p>
           </div>

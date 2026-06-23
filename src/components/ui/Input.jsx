@@ -15,7 +15,7 @@ export const Input = ({
   return (
     <div className={`flex flex-col gap-1.5 w-full ${className}`}>
       {label && (
-        <label htmlFor={id} className="block text-[11px] font-semibold text-slate-400 font-brand">
+        <label htmlFor={id} className="block text-[11px] font-semibold text-neutral-500 dark:text-neutral-400 font-brand">
           {label} {required && <span className="text-rose-500">*</span>}
         </label>
       )}
@@ -26,7 +26,7 @@ export const Input = ({
         onChange={onChange}
         placeholder={placeholder}
         required={required}
-        className={`w-full bg-slate-950 border border-slate-800 hover:border-slate-700/80 text-xs text-white placeholder:text-slate-700 rounded-lg px-3.5 py-2.5 outline-none transition-all focus:border-[var(--accent-color)] focus:ring-2 focus:ring-[var(--accent-color)]/20 ${
+        className={`w-full bg-white dark:bg-slate-950 border border-neutral-200 dark:border-slate-800 hover:border-neutral-300 dark:hover:border-slate-700 text-xs text-neutral-900 dark:text-white placeholder:text-neutral-400 dark:placeholder:text-neutral-500 rounded-lg px-3.5 py-2.5 outline-none transition-all focus:border-neutral-900 dark:focus:border-white focus:ring-2 focus:ring-neutral-900/5 dark:focus:ring-white/5 ${
           error ? "border-rose-500 focus:border-rose-500 focus:ring-rose-500/20" : ""
         }`}
         {...props}
